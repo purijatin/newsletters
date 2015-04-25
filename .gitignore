@@ -1,0 +1,6 @@
+scalatex/target
+scalatex/target/*
+.git
+.git/*
+
+*.class
