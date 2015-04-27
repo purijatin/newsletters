@@ -1,0 +1,8 @@
+@import Main._
+@import scalatex.site._
+
+@import scalatex.site.Section
+
+@sect("Generics")
+  @p
+    Hi. Generics is awesome!!
