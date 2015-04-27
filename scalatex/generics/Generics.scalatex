@@ -54,10 +54,9 @@
 
         @p
         	Never the less Type-Erasure has been a vital reason for the success of JVM (more on it below)
-
     @sect{Reification}
-   	    @p
+   	   @p
    	    	Here compiler not only provides type safety at compile-time but the Parametric Types are also embeded at runtime. A classic example are @code{Arrays} in Java. For example:
-   	    @hl.ref(wd/'generics/'src/'main/'java/"Animal.java")
-   	    @hl.ref(wd/'generics/'src/'main/'java/"Reify.java", start="Dog[]", end="//end")
+   	   @hl.ref(wd/'generics/'src/'main/'java/"Animal.java")
+   	   @hl.ref(wd/'generics/'src/'main/'java/"Reify.java", start="Dog[]", end="//end")
     	
