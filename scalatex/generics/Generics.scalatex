@@ -3,6 +3,60 @@
 
 @import scalatex.site.Section
 
-@sect("Generics")
+@a(
+  href:="https://github.com/purijatin/newsletters",
+  position.absolute,
+  top:=0,right:=0,border:=0,
+  img(
+    src:="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67",
+    alt:="Fork me on GitHub"
+  )
+)
+
+@sect("Polymorphism")
   @p
-    Hi. Generics is awesome!!
+    	Parametric Polymorphism is the ability to express data and functions over an abstract type but without specifying it. It is powerful in a sense that it lets you model behavior effectively.
+
+  @p 
+  		Java's type system is not as expressive as one would desire, but never the less has a mechanism to do Parametric Polymorphism with a construct called @code{Generics}.
+
+  @sect{Generics}
+    @p 
+        Generics are implemented differently in different languages. Broadly as:
+
+    @sect{Type Erasure}
+        @p 
+            Where generics are purely a compiler creation and runtime has no clue about their existence. For example in Java:
+        @hl.scala
+            List<Animal> ls = new ArrayList<Animal>();  
+        @p
+            This gets converted to below at runtime:
+        @hl.scala
+            List ls = new ArrayList();
+        @p
+            Compiler provides adequate type-safety at compile time but @code{erases} them while generating the runtime code. Which also means, it is difficult to know the parametric type of list (@code{List<Animal>} above) at runtime. (Not impossible though. See below). As a side-effect:
+        @div
+  			@hl.highlight(
+    			"""  public void evaluate(List<Integer> ls)
+  public void evaluate(List<String> ls)""",
+    			"scala"
+  			)	    
+
+    	@p
+        	The runtime cant distinguish between above, as both will get erased to @code{public void evaluate(List ls)}. Nor can you try doing:
+        @div
+        	@hl.highlight(
+        		"""  class Sample<T>{
+    T ob = new T(); //not possible
+ }""",
+        		"scala"
+        	)	
+
+        @p
+        	Never the less Type-Erasure has been a vital reason for the success of JVM (more on it below)
+
+    @sect{Reification}
+   	    @p
+   	    	Compiler not only provides type safety at compile-time but the Parametric Types are also embeded at runtime. A classic example are @code{Arrays} in Java. For example:
+
+    	
