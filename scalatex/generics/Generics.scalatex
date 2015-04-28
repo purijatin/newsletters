@@ -18,45 +18,58 @@
     	Parametric Polymorphism is the ability to express data and functions over an abstract type but without specifying it. It is powerful in a sense that it lets you model behavior effectively.
 
   @p 
-  		Java's type system is not as expressive as one would desire, but never the less has a mechanism to do Parametric Polymorphism with a construct called @code{Generics}.
+  		Different languages have chosen different tradeoffs between code footprint and abstraction. Java's type system is not as expressive as one would like it to be, but never the less has a mechanism to do Parametric Polymorphism with a construct called @code{Generics}.
 
   @sect{Generics}
     @p 
         Generics are implemented differently in different languages. Broadly as:
 
-    @sect{Type Erasure}
+    @sect{Type Erasure} 
         @p 
-            Where generics are purely a compiler creation and runtime has no clue about their existence. For example in Java:
+            Compiler by a process called as Homogeneous Translation erases all possible reference translations of a class at compile time to one class at runtime. Simply put, generics are purely a compiler creation and runtime has no clue about their existence. For example in Java:
         @hl.scala
-            List<Animal> ls = new ArrayList<Animal>();  
+            List<Animal> ls = new ArrayList<Animal>();
+            List<String> ls = new ArrayList<String>();
         @p
-            This gets converted to below at runtime:
+            Both the above gets converted to below at runtime:
         @hl.scala
             List ls = new ArrayList();
         @p
-            Compiler provides adequate type-safety at compile time but @code{erases} them while generating the runtime code. Which also means, it is difficult to know the parametric type of list (@code{List<Animal>} above) at runtime. (Not impossible though. See below). As a side-effect:
+            Compiler provides adequate type-safety at compile time but @code{erases} them while generating the runtime code. By Java8, specifically there is no special byte-code for Generic classes or methods. This means, it is difficult to know the exact parametric type of list at runtime. (Not impossible though. See below). As a side-effect:
         @div
-  			@hl.highlight(
-    			"""  public void evaluate(List<Integer> ls)
-  public void evaluate(List<String> ls)""",
-    			"scala"
-  			)	    
+        @hl.highlight(
+          """  public void evaluate(List<Integer> ls)
+  public void evaluate(List<String> ls)
+  //both the above gets compiled to the same method below(to verify do `javap -c file.class`):
 
-    	@p
-        	The runtime cant distinguish between above, as both will get erased to @code{public void evaluate(List ls)}. Nor can you try doing:
-        @div
-        	@hl.highlight(
-        		"""  class Sample<T>{
-    T ob = new T(); //not possible
- }""",
-        		"scala"
-        	)	
+  public void evaluate(List ls)
+  //This is why you cannot do method-overloading based on parametric type""",
+          "scala"
+        )     
 
         @p
-        	Never the less Type-Erasure has been a vital reason for the success of JVM (more on it below)
+          Nor can you do:
+        @div
+          @hl.highlight(
+            """  class Sample<T>{
+    T ob = new T(); //not possible
+ }""",
+            "scala"
+          ) 
+
+        @p
+          Never the less Type-Erasure has been a vital reason for the success of JVM (more on it below)
+
     @sect{Reification}
-   	   @p
-   	    	Here compiler not only provides type safety at compile-time but the Parametric Types are also embeded at runtime. A classic example are @code{Arrays} in Java. For example:
-   	   @hl.ref(wd/'generics/'src/'main/'java/"Animal.java")
-   	   @hl.ref(wd/'generics/'src/'main/'java/"Reify.java", start="Dog[]", end="//end")
+        @p
+            Languages like C++ and C# have a provison where they create a specialized class for each instantiation of a template. This is called as Heterogenous Translation. 
+            Which means compiler not only provides type safety at compile-time but the Parametric Types are also embeded at runtime. A classic example are @code{Arrays} in Java. For example:
+        @hl.ref(wd/'generics/'src/'main/'java/"Animal.java")
+        @hl.ref(wd/'generics/'src/'main/'java/"Reify.java", start="Dog[]", end="//end")
+        @p Another example of reified types in Java are specializations to be introduced in java9 under @a("Project-Valhalla",href:="http://openjdk.java.net/projects/valhalla/")
+Project-Valhalla
+
+
+        @p 
+          The end        
     	
