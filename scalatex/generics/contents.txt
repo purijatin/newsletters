@@ -1,0 +1,37 @@
+Generics:
+
+	- Type Erasure
+	- Reifiables
+		Array Example vs List
+		List<int> Project-Valhalla
+
+	Generics:
+		Sub and Super Typing
+			Liskov Substitution Principle
+
+
+		Co-Variance & Contra-Variance
+			Using notation.
+			Array Example		
+			ability to do above using wild-cards
+			Numorous example showcasing above. Writes and Reads
+			Class design using them.
+				Examples: Collections.max, Collections.copy, Collectors.
+			Assignment: Design Function
+
+		Type-Inference (Probable)
+
+	Advanced:	
+		CaptureType, For Fields (http://stackoverflow.com/questions/1942644/get-generic-type-of-java-util-list)
+			This technique is extensively used by Mockito
+		Why Erasure is a good thing
+
+
+	Other Topics: 
+		toArray
+		Reflection
+		Backward Compatibility
+			http://stackoverflow.com/questions/745756/java-generics-wildcarding-with-multiple-classes
+			i think map.get
+		Retain type: Use Class<?> of the parameter
+		Varargs
