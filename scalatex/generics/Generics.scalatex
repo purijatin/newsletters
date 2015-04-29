@@ -26,10 +26,12 @@
 
 @sect("Polymorphism")
   @p
+    I wrote a book by accident. Get some coffee first.
+  @p
     	Parametric Polymorphism is the ability to express data and functions over an abstract type but without specifying it. It is powerful in a sense that it lets you model behavior effectively.
 
   @p 
-  		Different languages have chosen different tradeoffs between code footprint and abstraction to implement Parametric Polymorphism, hence giving rise to different flavors in implentation.
+  		Different languages have chosen different tradeoffs between code footprint and abstraction to implement Parametric Polymorphism, hence giving rise to different flavors in implementation.
   		Java's type system is not as expressive as one would like it to be, but never the less has a mechanism to do Parametric Polymorphism with a construct called @code{Generics}.
 
   @sect{Generics}
@@ -86,15 +88,15 @@
     @sect{Reification}
 
         @p
-            An alternative way to implement generics is using a process called Heterogenous Translation. Languages like C++ and C# have a provison where they create a specialized class for each instantiation of a template.
+            An alternative way to implement generics is using a process called Heterogenous Translation. Languages like C++ and C# have a provision where they create a specialized class for each instantiation of a template.
             An example of this in Java, is something called @b{Specializations} to be introduced in java9 under @a("Project-Valhalla",href:="http://openjdk.java.net/projects/valhalla/")
         @hl.ref(wd/'generics/'src/'main/'resources/"Java9.java",start="ls1", end="//end")
         @p
-            Now this means compiler not only provides type safety at compile-time but the Parametric Types are also embeded at runtime. 
+            Now this means compiler not only provides type safety at compile-time but the Parametric Types are also embedded at runtime. 
             Above @code{List<int>} is aware of it being a list of @code{int's}. The information is not erased. (Though this functionality will only be available only for primitives and value classes (Yes! the same value classes of the functional world))
 
         @p
-            This ability to contain the type information at runtime is called @code{reifiability}. In Java all primities, non-generic classes are reifiable. Another classic example are @code{Arrays} in Java:
+            This ability to contain the type information at runtime is called @code{reifiability}. In Java all primitives, non-generic classes are reifiable (More details in @a("JLS",href:="https://docs.oracle.com/javase/specs/jls/se7/html/jls-4.html#jls-4.7")). Another classic example are @code{Arrays} in Java:
         @pairs
             @half
               @hl.ref(wd/'generics/'src/'main/'java/"Reify.java", start="Dog[]", end="//end")
@@ -183,9 +185,49 @@
       This sub-typing relationship made post java-5 code backward compatible. Wild cards are only possible in a language where generics are implemented using erasure. List<?> would make no sense in reifiable world (what would it mean at runtime?)
       Wild card's also let you provide bounds, thus enabling co-variance and contra-variance behavior in Java:
     @hl.ref(wd/'generics/'src/'main/'resources/"Variance.java", start="List<?>", end="//end")        
-    @p
+  @sect{Case-Studies}
+    @sect{Co-Variant Arrays}
+      @p
+        We saw at @sect.ref{Co-Variance} example, that arrays in java are co-variant:
+      @hl.ref(wd/'generics/'src/'main/'resources/"Variance.java", start="arrays()", end="//end")
+      @p
+        Line (1),(2),(3) would throw a ArrayStoreException at runtime. Why? because if it doesn't, then this will:
+      @hl.scala
+        Dog d = dogs[1];
+        //BOOM! ClassCastException
+      @p
+        @u{Shouldn't the compiler have caught this wrong doing at compile time?}. There is no point of static-typing if the compiler cant prevent these.
+        Turns out the culprit is making arrays as @code{co-variant}. i.e. the ability to do @code{Animal[] ob = dogs} at line-a has put us in trouble.
+
+      @p
+        Co-Variant Arrays are also a reason why arrays of generic classes are illegal:
+      @pairs
+        @half
+          @hl.ref(wd/'generics/'src/'main/'resources/"Variance.java", start="ArrayList<String>[]", end="//end")  
+        @half
+          @exampleWrapper
+            @hl.ref(wd/'generics/'src/'main/'resources/"Variance.java", start="//If it", end="//end")  
+      @p
+        Hence the compiler does not let you create arrays of generic classes. Though there is an exception:
+        @hl.scala
+          ArrayList<?>[] ls = new ArrayList<?>[0];
+        @p 
+          The explanation on why its legal is left as food for thought to readers.  
+
+      @p
+        Co-Variant Arrays is language blunder. In one of the talks, Martin Odersky had mentioned that this decision was made as a tradeoff to be able to do below in initial java version:
+      @hl.scala
+        public static void sort(Object[] a) //Arrays.sort
+      @p
+        Without arrays being co-variant it would had been impossible to have a sort method, which could take any kind of arrays to sort (Remember there was no generics then, so the only way to be able to take all kinds of array as argument was to make them co-variant). Obviously many modern languages have marked Arrays as invariant. 
+      @p 
+        Another important thing to notice here is: @b{Co-variance might not go well with mutability}
+        
+
+
+    
       
-      It lets you do stuff (like covariance and contra-variance) whih would had not been possible without.
+      
 
         
           

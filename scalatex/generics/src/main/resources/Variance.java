@@ -27,4 +27,33 @@ public class Variance{
 		//	 Dog <: This unknown type <: Object
 		//end
 	}
+	public void arrays(){
+		Dog[] dogs = new Dog[3];
+		Animal[] ob = dogs; //line-a
+		ob[0] = new Cat(); //(1)
+		ob[1] = "";//(2)
+		ob[2] = SimpleBeanFactoryAwareAspectInstanceFactory
+				.getBean()
+				.getBeanContextServiceProviderBeanInfo();//(3)
+		//Thats how folks in java world name classes right?
+		//end
+	}
+
+	public void genericArrays(){
+		ArrayList<String>[] ls = 
+			new ArrayList<String>[3];
+		//Above is illegal in Java.
+		//end
+		//If it was allowed, you could do:
+		Object[] ob = ls;
+		ob[0] = new ArrayList<Animal>();
+		//An ArrayStoreExcepton should have been thrown,
+		//but the runtime can't detect it
+		ArrayList<String> s = ls[0];
+		String name = s.get(0); 
+		//BOOM! BOOM! ClassCastException
+		//s.get(0) will return an Animal and not String		
+		//end
+	}
+
 }
