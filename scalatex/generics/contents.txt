@@ -20,6 +20,8 @@ Generics:
 			Assignment: Design Function
 
 		Type-Inference (Probable)
+		Structural typing
+		Nominal typing
 
 	Advanced:	
 		CaptureType, For Fields (http://stackoverflow.com/questions/1942644/get-generic-type-of-java-util-list)
