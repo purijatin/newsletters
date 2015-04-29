@@ -1,0 +1,309 @@
+<html><head><link href="META-INF/resources/webjars/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" /><link href="styles.css" rel="stylesheet" /><style>
+.scalatex-site-Styles-headerLink{
+  color: #777;
+  opacity: 0.05;
+  text-decoration: none;
+}
+
+
+.scalatex-site-Styles-hoverContainer:hover .scalatex-site-Styles-headerLink{
+  color: #777;
+  opacity: 0.5;
+  text-decoration: none;
+}
+.scalatex-site-Styles-hoverContainer:hover .scalatex-site-Styles-headerLink:hover{
+  opacity: 1.0;
+}
+.scalatex-site-Styles-hoverContainer:hover .scalatex-site-Styles-headerLink:active{
+  opacity: 0.75;
+}
+
+.scalatex-site-Styles-content{
+  color: #777;
+  line-height: 1.6em;
+  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 800;
+  padding: 0 1em;
+  padding-bottom: 50px;
+}
+.scalatex-site-Styles-content *{
+  position: relative;
+}
+.scalatex-site-Styles-content p{
+  text-align: justify;
+}
+.scalatex-site-Styles-content a:link{
+  color: #37a;
+  text-decoration: none;
+}
+.scalatex-site-Styles-content a:visited{
+  color: #949;
+  text-decoration: none;
+}
+.scalatex-site-Styles-content a:hover{
+  text-decoration: underline;
+}
+.scalatex-site-Styles-content a:active{
+  color: #000;
+  text-decoration: underline;
+}
+.scalatex-site-Styles-content code{
+  color: #000;
+}
+
+/*Workaround for bug in highlight.js IDEA theme*/
+span.hljs-tag, span.hljs-symbol{
+    background: none;
+}
+    </style><script src="scripts.js"></script></head><body><div>
+
+<a href="https://github.com/purijatin/newsletters" style="position: absolute;top: 0px;right: 0px;border: 0;"><img src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" /></a>
+
+
+<div style="margin: 0px;color: #333;text-align: center;padding: 2.5em 2em 0;border-bottom: 1px solid #eee;display: block;" id="Polymorphism" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><h1 style="margin: 0.2em 0;font-size: 3em;font-weight: 300;">Polymorphism<a class=" scalatex-site-Styles-headerLink" href="#Polymorphism" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a></h1><br /></div><div class=" scalatex-site-Styles-content">
+  <p>
+    I wrote a book by accident. Get some coffee first.</p>
+  <p>
+    	Parametric Polymorphism is the ability to express data and functions over an abstract type but without specifying it. It is powerful in a sense that it lets you model behavior effectively.
+</p>
+  <p></p>
+  		Different languages have chosen different tradeoffs between code footprint and abstraction to implement Parametric Polymorphism, hence giving rise to different flavors in implementation.
+  		Java's type system is not as expressive as one would like it to be, but never the less has a mechanism to do Parametric Polymorphism with a construct called <code>Generics</code>.
+
+  <div style="margin: 0px;color: #333;text-align: center;padding: 2.5em 2em 0;border-bottom: 1px solid #eee;display: block;" id="Generics" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><h1 style="margin: 0.2em 0;font-size: 3em;font-weight: 300;" id="Generics">Generics<a class=" scalatex-site-Styles-headerLink" href="#Generics" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a></h1><br /></div>
+    <p>
+        Generics are called and implemented differently in different languages. Two of the well known implementations are using:
+</p>
+    <h1 id="TypeErasure" style="display: block;" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><a class=" scalatex-site-Styles-headerLink" href="#TypeErasure" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a>Type Erasure</h1>
+        <p>
+            Compiler by a process called as Homogeneous Translation erases all possible reference translations of a class at compile time to one class at runtime.
+            This is what Java compiler also does:</p>
+        <div>
+          <div style="width: 50%;float: left;">
+            <pre><code class="scala scalatex-site-Styles-highlightMe">List&lt;Dog&gt; ls = new ArrayList&lt;Dog&gt;()
+List&lt;Long&gt; ls = new ArrayList&lt;Long&gt;()</code></pre></div>
+          <div style="width: 50%;float: left;">
+            <hr /><div style="opacity: 0.6;font-style: oblique;">
+               <p>
+                At runtime, both the statements on left gets converted to:</p>
+               <pre><code class="scala scalatex-site-Styles-highlightMe">List ls = new ArrayList();
+</code></pre></div><hr /></div><div style="clear: both;"></div></div>
+        <p>
+            This technique is called as Type Erasure. Simply put, generics are a compile-time creation and runtime has no clue about their existence.
+            Compiler provides adequate type-safety at compile time but <code>erases</code> them at runtime.</p>
+        <p>
+            In Java8, there is no special byte-code for Generic classes or generic methods. They dont exist in reality
+            This also means, it is difficult to know the exact generic type of list at runtime. (Not impossible though. See below). As a side-effect:</p>
+        <div></div>
+        <pre><code class="scala scalatex-site-Styles-highlightMe">public void evaluate(List&lt;Integer&gt; ls)
+public void evaluate(List&lt;String&gt; ls)
+//both the above gets compiled to the same method below (to verify do `javap -c file.class`):
+
+public void evaluate(List ls)
+//This is why you cannot do method-overloading based on generic type as they compile down to same method causing conflict</code></pre>
+
+        <p>
+          Nor can you do below:</p>
+        <div>
+          <pre><code class="scala scalatex-site-Styles-highlightMe"> class Sample&lt;T&gt;{
+   T ob = new T(); //not possible
+}</code></pre>
+</div>
+        <p>
+          Never the less Type-Erasure has been a vital reason for the success of JVM (more on it below)</p>
+        <p></p>
+
+    <h1 id="Reification" style="display: block;" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><a class=" scalatex-site-Styles-headerLink" href="#Reification" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a>Reification</h1>
+
+        <p>
+            An alternative way to implement generics is using a process called Heterogenous Translation. Languages like C++ and C# have a provision where they create a specialized class for each instantiation of a template.
+            An example of this in Java, is something called <b>Specializations</b> to be introduced in java9 under <a href="http://openjdk.java.net/projects/valhalla/">Project-Valhalla</a></p>
+        <pre class=" scalatex-site-Styles-hoverContainer"><code class="java scalatex-site-Styles-highlightMe">List&lt;int&gt; ls1 = new ArrayList&lt;int&gt;();
+System.out.println(List&lt;int&gt;.class.equals(List.class));//false		
+System.out.println(List&lt;int&gt;.class.equals(List&lt;double&gt;.class));//false		
+
+System.out.println(List&lt;int&gt;.class);</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/lihaoyi/scalatex/tree/master/generics/src/main/resources/Java9.java#L5-L10" target="_blank"><i class="fa fa-link "></i></a></pre>
+        <p>
+            Now this means compiler not only provides type safety at compile-time but the Parametric Types are also embedded at runtime.
+            Above <code>List&lt;int&gt;</code> is aware of it being a list of <code>int's</code>. The information is not erased. (Though this functionality will only be available only for primitives and value classes (Yes! the same value classes of the functional world))
+</p>
+        <p>
+            This ability to contain the type information at runtime is called <code>reifiability</code>. In Java all primitives, non-generic classes are reifiable (More details in <a href="https://docs.oracle.com/javase/specs/jls/se7/html/jls-4.html#jls-4.7">JLS</a>). Another classic example are <code>Arrays</code> in Java:</p>
+        <div>
+            <div style="width: 50%;float: left;">
+              <pre class=" scalatex-site-Styles-hoverContainer"><code class="java scalatex-site-Styles-highlightMe">Dog[] d = new Dog[1];
+d.getClass().equals(Dog[].class);
+//It knows it is an array of dogs
+Object[] ob = d;
+ob[0] = new Animal(); 
+//throws ArrayStoreException at runtime. This is because it has information available at runtime regarding dogness of `ob`</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/lihaoyi/scalatex/tree/master/generics/src/main/java/Reify.java#L4-L10" target="_blank"><i class="fa fa-link "></i></a></pre></div>
+            <div style="width: 50%;float: left;">
+              <hr /><div style="opacity: 0.6;font-style: oblique;">
+                <pre class=" scalatex-site-Styles-hoverContainer"><code class="java scalatex-site-Styles-highlightMe">public class Animal {}
+class Dog extends Animal{}</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/lihaoyi/scalatex/tree/master/generics/src/main/java/Animal.java#L0-L2" target="_blank"><i class="fa fa-link "></i></a></pre>
+</div><hr /></div><div style="clear: both;"></div></div>
+        <hr />
+        <p>
+            Generics in java were introduced in java5. They are erased for so as to be compatible with pre-java5 code.</p>
+        <pre><code class="scala scalatex-site-Styles-highlightMe">public void get(List ls){}
+get(new ArrayList&lt;Animal&gt;()) //This would have not compiled if the types were reified as then the byte-code would have changed</code></pre>
+        <p>
+            Type-Erasure has been a vital success on JVM. More so as other JVM languages like Groovy, Clojure, Scala, Kotlin etc have been able to do their innovation with no limitation on the runtime-side.
+            This would had certainly not been possible if generics were reified. To explain further: <u>Being able to inspect types at runtime undermines the knowledge you have about types at compile time</u>.
+            We will see more on this later.
+</p>
+  <div style="margin: 0px;color: #333;text-align: center;padding: 2.5em 2em 0;border-bottom: 1px solid #eee;display: block;" id="Sub-Typing(&lt;:)" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><h1 style="margin: 0.2em 0;font-size: 3em;font-weight: 300;" id="Sub-Typing(&lt;:)">Sub-Typing (&lt;:)<a class=" scalatex-site-Styles-headerLink" href="#Sub-Typing(&lt;:)" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a></h1><br /></div>
+    <p>
+      What do we mean when we say <b>Dog is a sub-type of Animal</b>?</p>
+    <h1 id="LiskovSubstitution" style="display: block;" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><a class=" scalatex-site-Styles-headerLink" href="#LiskovSubstitution" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a>Liskov Substitution</h1>
+      <p>
+        <a href="http://www.cs.cmu.edu/afs/cs.cmu.edu/project/venari/papers/subtype-tr/paper.ps">Liskov Substitution Principle</a> tells that:
+        <blockquote>If &quot;A&quot; extends &quot;B&quot; (A &lt;: B), then all the things that can be done with &quot;B&quot; should also be legal with &quot;A&quot;</blockquote></p>
+      <p>
+        i.e. If Dog extends Animal, then the animal object can be legally replaceable by the dog object all through.</p>
+      <p></p> Glossary of notations:
+      <ul>
+        <li>
+          Subtype <code>&lt;:</code> - This can be read as <b>extends</b>. Example: <b>Dog extends Animal</b>. <code>Dog &lt;: Animal</code></li>
+        <li>
+          Supertype <code>&gt;:</code> - The opposite of <code>&lt;:</code>. Example: <b>Animal is a Supertype of Dog</b>. <code>Animal &gt;: Dog</code></li>
+        <li>
+          <code>=:=</code> - Neither Sub or Super type. If <code>A =:= B</code> then A and B are same
+</li></ul>
+      <p>
+        We will now see sub-typing influences generics and its influence on class design.</p>
+  <div style="margin: 0px;color: #333;text-align: center;padding: 2.5em 2em 0;border-bottom: 1px solid #eee;display: block;" id="Variance" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><h1 style="margin: 0.2em 0;font-size: 3em;font-weight: 300;" id="Variance">Variance<a class=" scalatex-site-Styles-headerLink" href="#Variance" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a></h1><br /></div>
+    <p>
+      This is as intense as it can get, but hold on. It is the one ring to rule them all in Java Generics world.</p>
+    <h1 id="Co-Variance" style="display: block;" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><a class=" scalatex-site-Styles-headerLink" href="#Co-Variance" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a>Co-Variance</h1>
+      <p>
+        Let <code>M&lt;X&gt;</code> be a class with <code>X</code> as its generic type. <code>M</code> is said to be co-variant with its generic type if:</p>
+      <pre><code class="scala scalatex-site-Styles-highlightMe">If A &lt;: B, then M&lt;A&gt; &lt;: M&lt;B&gt;</code></pre>
+      <p>
+        Arrays in Java are co-variant.</p>
+      <pre class=" scalatex-site-Styles-hoverContainer"><code class="java scalatex-site-Styles-highlightMe">Animal a = new Dog(); // Dog &lt;: Animal
+Dog[] dog = new Dog[1];
+Animal[] animals = dog; // Dog[] &lt;: Animal[]
+Object[] objects = dog; // Dog[] &lt;: Animal[]</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/lihaoyi/scalatex/tree/master/generics/src/main/resources/Variance.java#L4-L8" target="_blank"><i class="fa fa-link "></i></a></pre>
+    <h1 id="Contra-Variance" style="display: block;" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><a class=" scalatex-site-Styles-headerLink" href="#Contra-Variance" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a>Contra-Variance</h1>
+      <p>
+        Let <code>M&lt;X&gt;</code> be a class with <code>X</code> as its generic type. <code>M</code> is said to be contra-variant with its generic type if:</p>
+      <pre><code class="scala scalatex-site-Styles-highlightMe">If A &lt;: B, then M&lt;A&gt; &gt;: M&lt;B&gt;</code></pre>
+      <code>andThen</code> method in <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html#andThen-java.util.function.Consumer-">Consumer.java</a> is contra-variant in its argument type
+      <pre><code class="scala scalatex-site-Styles-highlightMe">default Consumer&lt;T&gt; andThen(Consumer&lt;? super T&gt; after)
+</code></pre>
+    <h1 id="In-Variance" style="display: block;" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><a class=" scalatex-site-Styles-headerLink" href="#In-Variance" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a>In-Variance</h1>
+      <p>
+        If class is neither co-varianct nor contra-variant in its generic type, then it is invariant. Generics (without usage of wild-card) in java are invariant.</p>
+      <pre class=" scalatex-site-Styles-hoverContainer"><code class="java scalatex-site-Styles-highlightMe">List&lt;Animal&gt; ls = new ArrayList&lt;Dog&gt;(); // co-variance. Invalid in Java
+List&lt;Dog&gt; ls = new ArrayList&lt;Animal&gt;(); // contra-variance. Invalid in Java
+List&lt;Animal&gt; ls = new ArrayList&lt;Animal&gt;(); // in-variant. valid.</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/lihaoyi/scalatex/tree/master/generics/src/main/resources/Variance.java#L12-L15" target="_blank"><i class="fa fa-link "></i></a></pre>
+      <p></p>
+      	Java's type system does not give a provison to have co-variant and contra-variant generic classess. Yet there is a provison to almost provide them using wildcards (Frankly the experience is far from right)
+  <div style="margin: 0px;color: #333;text-align: center;padding: 2.5em 2em 0;border-bottom: 1px solid #eee;display: block;" id="Rawtype(?)" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><h1 style="margin: 0.2em 0;font-size: 3em;font-weight: 300;" id="Rawtype(?)">Raw type (?)<a class=" scalatex-site-Styles-headerLink" href="#Rawtype(?)" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a></h1><br /></div>
+    <p>
+      <code>?</code> is a wild card or a hack. A wild-card can be read as <b>some unknown type</b>. So when we say:</p>
+    <pre><code class="scala scalatex-site-Styles-highlightMe">List&lt;?&gt; ls ;</code></pre>
+    <p></p> It means `ls` is a list of some unknown type which we do not precisely know. Raw types are a bridge between pre and post Java5 code.
+    <div>
+      <div style="width: 50%;float: left;">
+        <pre><code class="scala scalatex-site-Styles-highlightMe">List&lt;Integer&gt;  &lt;:  List&lt;?&gt;
+List&lt;?&gt;  &lt;: List
+// Hence by transitivity,
+List&lt;Integer&gt; &lt;: List</code></pre></div>
+      <div style="width: 50%;float: left;">
+        <hr /><div style="opacity: 0.6;font-style: oblique;">
+          <pre><code class="scala scalatex-site-Styles-highlightMe">List&lt;?&gt; ls = new ArrayList&lt;Integer&gt;();
+List ls2 = ls;
+// Hence by transitivity,
+List ls3 = new ArrayList&lt;Integer&gt;();</code></pre></div><hr /></div><div style="clear: both;"></div></div>
+    <p>
+      This sub-typing relationship made post java-5 code backward compatible. Wild cards are only possible in a language where generics are implemented using erasure. List&lt;?&gt; would make no sense in reifiable world (what would it mean at runtime?)
+      Wild card's also let you provide bounds, thus enabling co-variance and contra-variance behavior in Java:</p>
+    <pre class=" scalatex-site-Styles-hoverContainer"><code class="java scalatex-site-Styles-highlightMe">List&lt;?&gt; ls ;// ls is a list of some unknown type. 
+List&lt;? extends Dog&gt; dog; // dog is a list of elements of some unknown type.
+// In java, all reference types extends Object. So now we know that:
+//	-	This unknown type &lt;: Object
+//	-	Dog &lt;: Thus unknown type
+// What we do not know is, the precise type of the unknown type. It can be anything in between the bounds
+List&lt;? super Dog&gt; dog; 		
+//	 Dog &lt;: This unknown type &lt;: Object</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/lihaoyi/scalatex/tree/master/generics/src/main/resources/Variance.java#L19-L27" target="_blank"><i class="fa fa-link "></i></a></pre>
+  <div style="margin: 0px;color: #333;text-align: center;padding: 2.5em 2em 0;border-bottom: 1px solid #eee;display: block;" id="Case-Studies" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><h1 style="margin: 0.2em 0;font-size: 3em;font-weight: 300;" id="Case-Studies">Case-Studies<a class=" scalatex-site-Styles-headerLink" href="#Case-Studies" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a></h1><br /></div>
+    <h1 id="Co-VariantArrays" style="display: block;" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><a class=" scalatex-site-Styles-headerLink" href="#Co-VariantArrays" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a>Co-Variant Arrays</h1>
+      <p>
+        We saw at <a href="#Co-Variance">Co-Variance</a> example, that arrays in java are co-variant:</p>
+      <pre class=" scalatex-site-Styles-hoverContainer"><code class="java scalatex-site-Styles-highlightMe">public void arrays(){
+	Dog[] dogs = new Dog[3];
+	Animal[] ob = dogs; //line-a
+	ob[0] = new Cat(); //(1)
+	ob[1] = &quot;&quot;;//(2)
+	ob[2] = SimpleBeanFactoryAwareAspectInstanceFactory
+			.getBean()
+			.getBeanContextServiceProviderBeanInfo();//(3)
+	//Thats how folks in java world name classes right?</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/lihaoyi/scalatex/tree/master/generics/src/main/resources/Variance.java#L29-L38" target="_blank"><i class="fa fa-link "></i></a></pre>
+      <p>
+        Line (1),(2),(3) would throw a ArrayStoreException at runtime. Why? because if it doesn't, then this will:</p>
+      <pre><code class="scala scalatex-site-Styles-highlightMe">Dog d = dogs[1];
+//BOOM! ClassCastException</code></pre>
+      <p>
+        <u>Shouldn't the compiler have caught this wrong doing at compile time?</u>. There is no point of static-typing if the compiler cant prevent these.
+        Turns out the culprit is making arrays as <code>co-variant</code>. i.e. the ability to do <code>Animal[] ob = dogs</code> at line-a has put us in trouble.
+</p>
+      <p>
+        Co-Variant Arrays are also a reason why arrays of generic classes are illegal:</p>
+      <div>
+        <div style="width: 50%;float: left;">
+          <pre class=" scalatex-site-Styles-hoverContainer"><code class="java scalatex-site-Styles-highlightMe">ArrayList&lt;String&gt;[] ls = 
+	new ArrayList&lt;String&gt;[3];
+//Above is illegal in Java.</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/lihaoyi/scalatex/tree/master/generics/src/main/resources/Variance.java#L42-L45" target="_blank"><i class="fa fa-link "></i></a></pre></div>
+        <div style="width: 50%;float: left;">
+          <hr /><div style="opacity: 0.6;font-style: oblique;">
+            <pre class=" scalatex-site-Styles-hoverContainer"><code class="java scalatex-site-Styles-highlightMe">//If it was allowed, you could do:
+Object[] ob = ls;
+ob[0] = new ArrayList&lt;Animal&gt;();
+//An ArrayStoreExcepton should have been thrown,
+//but the runtime can't detect it
+ArrayList&lt;String&gt; s = ls[0];
+String name = s.get(0); 
+//BOOM! BOOM! ClassCastException
+//s.get(0) will return an Animal and not String		</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/lihaoyi/scalatex/tree/master/generics/src/main/resources/Variance.java#L46-L55" target="_blank"><i class="fa fa-link "></i></a></pre></div><hr /></div><div style="clear: both;"></div></div>
+      <p>
+        Hence the compiler does not let you create arrays of generic classes. Though there is an exception:
+        <pre><code class="scala scalatex-site-Styles-highlightMe">ArrayList&lt;?&gt;[] ls = new ArrayList&lt;?&gt;[0];</code></pre>
+        <p>
+          The explanation on why its legal is left as food for thought to readers.
+</p></p>
+      <p>
+        Co-Variant Arrays is language blunder. In one of the talks, Martin Odersky had mentioned that this decision was made as a tradeoff to be able to do below in initial java version:</p>
+      <pre><code class="scala scalatex-site-Styles-highlightMe">public static void sort(Object[] a) //Arrays.sort</code></pre>
+      <p>
+        Without arrays being co-variant it would had been impossible to have a sort method, which could take any kind of arrays to sort (Remember there was no generics then, so the only way to be able to take all kinds of array as argument was to make them co-variant). Obviously many modern languages have marked Arrays as invariant.</p>
+      <p>
+        Another important thing to notice here is: <b>Co-variance might not go well with mutability</b>
+
+
+
+
+
+
+
+
+
+
+
+</p></div>
+</div><script>
+    scalatex.scrollspy.Controller().main(
+      [{"value":"Polymorphism","children":[{"value":"Generics","children":[{"value":"Type Erasure","children":[]},{"value":"Reification","children":[]}]},{"value":"Sub-Typing (<:)","children":[{"value":"Liskov Substitution","children":[]}]},{"value":"Variance","children":[{"value":"Co-Variance","children":[]},{"value":"Contra-Variance","children":[]},{"value":"In-Variance","children":[]}]},{"value":"Raw type (?)","children":[]},{"value":"Case-Studies","children":[{"value":"Co-Variant Arrays","children":[]}]}]}]
+  )</script><script>
+    ['DOMContentLoaded', 'load'].forEach(function(ev){
+      addEventListener(ev, function(){
+        Array.prototype.forEach.call(
+          document.getElementsByClassName('scalatex-site-Styles-highlightMe'),
+          hljs.highlightBlock
+        );
+      })
+    })
+  </script></body></html>
