@@ -15,4 +15,16 @@ public class Variance{
 		List<Animal> ls = new ArrayList<Animal>(); // in-variant. valid.
 		//end
 	}
+
+	public void wild(){
+		List<?> ls ;// ls is a list of some unknown type. 
+		List<? extends Dog> dog; // dog is a list containing elements of some unknown type.
+		// In java, all reference types extends Object. So now we know that:
+		//	-	This unknown type <: Object
+		//	-	Dog <: Thus unknown type
+		// What we do not know is, the precise type of the unknown type. It can be anything in between the bounds
+		List<? super Dog> dog; 		
+		//	 Dog <: This unknown type <: Object
+		//end
+	}
 }

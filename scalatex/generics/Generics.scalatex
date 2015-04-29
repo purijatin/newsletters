@@ -12,6 +12,8 @@
     alt:="Fork me on GitHub"
   )
 )
+@def pairs(frags: Frag*) = div(frags, div(clear:="both"))
+@def half(frags: Frag*) = div(frags, width:="50%", float.left)
 
 @sect("Polymorphism")
   @p
@@ -30,16 +32,17 @@
             Compiler by a process called as Homogeneous Translation erases all possible reference translations of a class at compile time to one class at runtime. 
             Java compiler does this. An example:
         @hl.scala
-            List<Animal> ls = new ArrayList<Animal>();
-            List<String> ls = new ArrayList<String>();
+            List<Dog> ls = new ArrayList<Dog>()
+            List<String> ls = new ArrayList<String>()
         @p
-            Both the above gets converted to below at runtime:
+            Both the statements gets converted to below at runtime:
         @hl.scala
             List ls = new ArrayList();
         @p
-            This technique is called as Type Erasure. Simply put, here generics are purely a compiler creation and runtime has no clue about their existence. 
+            This technique is called as Type Erasure. Simply put, generics are a compile-time creation and runtime has no clue about their existence. 
             Compiler provides adequate type-safety at compile time but @code{erases} (we are going to use this word a lot) them at runtime. 
-            In Java8, there is no special byte-code for Generic classes or generic methods. Its like a dream, you see it but doesnt exist in reality. 
+        @p
+            In Java8, there is no special byte-code for Generic classes or generic methods. They dont exist in reality
             This also means, it is difficult to know the exact parametric type of list at runtime. (Not impossible though. See below). As a side-effect:
         @div
         @hl.highlight(
@@ -48,12 +51,12 @@
   //both the above gets compiled to the same method below (to verify do `javap -c file.class`):
 
   public void evaluate(List ls)
-  //This is why you cannot do method-overloading based on parametric type""",
+  //This is why you cannot do method-overloading based on generic type as they compile down to same method causing conflict""",
           "scala"
         )     
 
         @p
-          Nor can you do below or do reflection:
+          Nor can you do below:
         @div
           @hl.highlight(
             """  class Sample<T>{
@@ -86,33 +89,33 @@
             public void get(List ls){}
             get(new ArrayList<Animal>()) //This would have not compiled if the types were reified as then the byte-code would have changed
         @p
-            Type-Erasure has been a vital success on JVM. More so as other JVM languages like Groovy, Clojure, Scala, Kotlin have been able to do their innovation with no limitation on the runtime-side. 
-            This would had certainly not been possible if they were reified. To explain further: @u{Being able to inspect types at runtime undermines the knowledge you have about types at compile time}.
+            Type-Erasure has been a vital success on JVM. More so as other JVM languages like Groovy, Clojure, Scala, Kotlin etc have been able to do their innovation with no limitation on the runtime-side. 
+            This would had certainly not been possible if generics were reified. To explain further: @u{Being able to inspect types at runtime undermines the knowledge you have about types at compile time}.
             We will see more on this later.
                     
   @sect{Sub-Typing (<:)}     
     @p
-      What do we mean when we say @b{Dog is a sub-type of Animal}? i.e. @code{Dog <: Animal}.
+      What do we mean when we say @b{Dog is a sub-type of Animal}?  
     @sect{Liskov Substitution}
       @p
         @a("Liskov Substitution Principle",href:="http://www.cs.cmu.edu/afs/cs.cmu.edu/project/venari/papers/subtype-tr/paper.ps") tells that:
         @blockquote{If "A" extends "B" (A <: B), then all the things that can be done with "B" should also be legal with "A"}
       @p 
-        If Dog extends Animal, then the animal object can be legally replaceable by the dog object all through. 
-      @p Some notations:
+        i.e. If Dog extends Animal, then the animal object can be legally replaceable by the dog object all through. 
+      @p Some notations we will be following:
       @ul
         @li 
-          Subtype @code{<:} - This can be read as @b{extends}. Example: Dog extends Animal. @code{Dog <: Animal}
+          Subtype @code{<:} - This can be read as @b{extends}. Example: @b{Dog extends Animal}. @code{Dog <: Animal}
         @li 
-          Supertype @code{>:} - The opposite of @code{<:}. Example: Animal is a Supertype of Dog. @code{Animal >: Dog}
+          Supertype @code{>:} - The opposite of @code{<:}. Example: @b{Animal is a Supertype of Dog}. @code{Animal >: Dog}
         @li 
-          @code{=:=} - Neither Sub or Super type. If @code{A =:= B} then A is same as B  
+          @code{=:=} - Neither Sub or Super type. If @code{A =:= B} then A and B are same
         
       @p
-        We will see the how generics behave with Sub-Typing and its influence on class design.
+        We will now see sub-typing influences generics and its influence on class design.
   @sect{Variance}
     @p
-      This is as intense as it can get, but hold on. This is the one ring to rule them all in Java Generics world.
+      This is as intense as it can get, but hold on. It is the one ring to rule them all in Java Generics world.
     @sect{Co-Variance}
       @p 
         Let @code{M<X>} be a class with @code{X} as its generic type. @code{M} is said to be co-variant with its generic type if:
@@ -129,15 +132,33 @@
       @code{andThen} method in @a("Consumer.java",href:="https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html#andThen-java.util.function.Consumer-") is contra-variant in its argument type
       @hl.scala
         default Consumer<T> andThen(Consumer<? super T> after)
-      @p 
-        We will come back to this again.  
+      
     @sect{In-Variance}  
       @p 
-        Class is neither co-variance not contra-variant in its generic type. Generics (without usage of wild-card) in java are In-Variant.
+        If class is neither co-varianct nor contra-variant in its generic type, then it is invariant. Generics (without usage of wild-card) in java are invariant.
       @hl.ref(wd/'generics/'src/'main/'resources/"Variance.java", start="List<Animal>", end="//end")        
-      @p
-        L
+  @sect{Raw type (?)}        
+    @p
+      @code{?} is a wild card or a hack. A wild-card can be read as @b{some unknown type}. So when we say:
+    @hl.scala
+      List<?> ls ;
+    @p It means `ls` is a list of some unknown type which we do not precisely know.
+    @p
+      Raw types are a bridge between pre and post Java5 code.
+    @hl.scala
+      List<Integer>  <:  List<?>
+      List<?>  <: List
+      // Hence by transitivity,
+      List<Integer> <: List
+    @p 
+      This sub-typing relationship made post java-5 code backward compatible. Wild cards are only possible in a language where generics are implemented using erasure. List<?> would make no sense in reifiable world (what would it mean at runtime?)
+      Wild card's also let you provide bounds, thus enabling co-variance and contra-variance behavior in Java:
+    @hl.ref(wd/'generics/'src/'main/'resources/"Variance.java", start="List<?>", end="//end")        
+    @p
+      
+      It lets you do stuff (like covariance and contra-variance) whih would had not been possible without.
 
+        
           
         
 
