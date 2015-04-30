@@ -222,6 +222,10 @@
         Without arrays being co-variant it would had been impossible to have a sort method, which could take any kind of arrays to sort (Remember there was no generics then, so the only way to be able to take all kinds of array as argument was to make them co-variant). Obviously many modern languages have marked Arrays as invariant. 
       @p 
         Another important insight we get from above experience is: @b{Co-variance might not go well with mutability}
+    @sect{Reads & Writes}    
+      @sect{Reads}
+        @p
+          Hi
   @hr
   @sect{More Interesting Stuff}
     @p 
