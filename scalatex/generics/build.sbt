@@ -1,0 +1,1 @@
+mainClass in Compile := Some("scalatex.Main")
