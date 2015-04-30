@@ -8,7 +8,7 @@ scalaVersion := "2.11.6"
 
 lazy val generics = scalatex.ScalatexReadme(
   folder = "generics",
-  url = "https://github.com/purijatin/newsletters/scalatex/tree/master",
+  url = "https://github.com/purijatin/newsletters/tree/master/scalatex",
   source = "Generics",
   targetFolder = "target/site"
 )

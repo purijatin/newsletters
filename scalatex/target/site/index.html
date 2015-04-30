@@ -135,7 +135,7 @@ class Java9{
     System.out.println(List&lt;double&gt;.class);//interface java.anyutil.List${0=D}		
     System.out.println(java.util.List.class);//interface java.util.List
   }
-}</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/scalatex/tree/master/generics/src/main/resources/Java9.java#L0-L16" target="_blank"><i class="fa fa-link "></i></a></pre>
+}</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/tree/master/scalatex/generics/src/main/resources/Java9.java#L0-L16" target="_blank"><i class="fa fa-link "></i></a></pre>
         <p>
             Notice <code>List&lt;int&gt;.class</code> prints <b>java.anyutil.List${0=I</b>} and <code>java.util.List.class</code> prints <b>java.util.List</b>. This means information about Parametric Types are also embedded at runtime.
             <code>List&lt;int&gt;</code> is aware of it being a list of <code>int's</code>. The information is not erased. (Though this functionality will only be available only for primitives and value classes in Java9)
@@ -149,11 +149,11 @@ d.getClass().equals(Dog[].class);
 //It knows it is an array of dogs
 Object[] ob = d;
 ob[0] = new Animal(); 
-//throws ArrayStoreException at runtime. This is because it has information available at runtime regarding dogness of `ob`</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/scalatex/tree/master/generics/src/main/java/Reify.java#L4-L10" target="_blank"><i class="fa fa-link "></i></a></pre></div>
+//throws ArrayStoreException at runtime. This is because it has information available at runtime regarding dogness of `ob`</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/tree/master/scalatex/generics/src/main/java/Reify.java#L4-L10" target="_blank"><i class="fa fa-link "></i></a></pre></div>
             <div style="width: 50%;float: left;">
               <hr /><div style="opacity: 0.6;font-style: oblique;">
                 <pre class=" scalatex-site-Styles-hoverContainer"><code class="java scalatex-site-Styles-highlightMe">public class Animal {}
-class Dog extends Animal{}</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/scalatex/tree/master/generics/src/main/java/Animal.java#L0-L2" target="_blank"><i class="fa fa-link "></i></a></pre>
+class Dog extends Animal{}</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/tree/master/scalatex/generics/src/main/java/Animal.java#L0-L2" target="_blank"><i class="fa fa-link "></i></a></pre>
 </div><hr /></div><div style="clear: both;"></div></div>
         <hr />
         <p>
@@ -197,7 +197,7 @@ get(new ArrayList&lt;Animal&gt;()) //This would not have compiled if the types w
       <pre class=" scalatex-site-Styles-hoverContainer"><code class="java scalatex-site-Styles-highlightMe">Animal a = new Dog(); // Dog &lt;: Animal
 Dog[] dog = new Dog[1];
 Animal[] animals = dog; // Dog[] &lt;: Animal[]
-Object[] objects = dog; // Dog[] &lt;: Animal[]</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/scalatex/tree/master/generics/src/main/resources/Variance.java#L4-L8" target="_blank"><i class="fa fa-link "></i></a></pre>
+Object[] objects = dog; // Dog[] &lt;: Animal[]</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/tree/master/scalatex/generics/src/main/resources/Variance.java#L4-L8" target="_blank"><i class="fa fa-link "></i></a></pre>
     <h1 id="Contra-Variance" style="display: block;" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><a class=" scalatex-site-Styles-headerLink" href="#Contra-Variance" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a>Contra-Variance</h1>
       <p>
         Let <code>M&lt;X&gt;</code> be a class with <code>X</code> as its generic type. <code>M</code> is said to be contra-variant with its generic type if:</p>
@@ -210,7 +210,7 @@ Object[] objects = dog; // Dog[] &lt;: Animal[]</code><a class=" scalatex-site-S
         If class is neither co-varianct nor contra-variant in its generic type, then it is invariant. Generics (without usage of wild-card) in java are invariant.</p>
       <pre class=" scalatex-site-Styles-hoverContainer"><code class="java scalatex-site-Styles-highlightMe">List&lt;Animal&gt; ls = new ArrayList&lt;Dog&gt;(); // co-variance. Invalid in Java
 List&lt;Dog&gt; ls = new ArrayList&lt;Animal&gt;(); // contra-variance. Invalid in Java
-List&lt;Animal&gt; ls = new ArrayList&lt;Animal&gt;(); // in-variant. valid.</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/scalatex/tree/master/generics/src/main/resources/Variance.java#L12-L15" target="_blank"><i class="fa fa-link "></i></a></pre>
+List&lt;Animal&gt; ls = new ArrayList&lt;Animal&gt;(); // in-variant. valid.</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/tree/master/scalatex/generics/src/main/resources/Variance.java#L12-L15" target="_blank"><i class="fa fa-link "></i></a></pre>
       <p></p>
       	Java's type system does not give a provison to have co-variant and contra-variant generic classess. Yet there is a provison to almost provide them using wildcards (Frankly the experience is far from right)
   <div style="margin: 0px;color: #333;text-align: center;padding: 2.5em 2em 0;border-bottom: 1px solid #eee;display: block;" id="Rawtype(?)" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><h1 style="margin: 0.2em 0;font-size: 3em;font-weight: 300;" id="Rawtype(?)">Raw type (?)<a class=" scalatex-site-Styles-headerLink" href="#Rawtype(?)" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a></h1><br /></div>
@@ -240,7 +240,7 @@ List&lt;? extends Dog&gt; dog; // dog is a list of elements of some unknown type
 //	-	Dog &lt;: Thus unknown type
 // What we do not know is, the precise type of the unknown type. It can be anything in between the bounds
 List&lt;? super Dog&gt; dog; 		
-//	 Dog &lt;: This unknown type &lt;: Object</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/scalatex/tree/master/generics/src/main/resources/Variance.java#L19-L27" target="_blank"><i class="fa fa-link "></i></a></pre>
+//	 Dog &lt;: This unknown type &lt;: Object</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/tree/master/scalatex/generics/src/main/resources/Variance.java#L19-L27" target="_blank"><i class="fa fa-link "></i></a></pre>
   <div style="margin: 0px;color: #333;text-align: center;padding: 2.5em 2em 0;border-bottom: 1px solid #eee;display: block;" id="Case-Studies" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><h1 style="margin: 0.2em 0;font-size: 3em;font-weight: 300;" id="Case-Studies">Case-Studies<a class=" scalatex-site-Styles-headerLink" href="#Case-Studies" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a></h1><br /></div>
     <h1 id="Co-VariantArrays" style="display: block;" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><a class=" scalatex-site-Styles-headerLink" href="#Co-VariantArrays" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a>Co-Variant Arrays</h1>
       <p>
@@ -253,7 +253,7 @@ List&lt;? super Dog&gt; dog;
 	ob[2] = SimpleBeanFactoryAwareAspectInstanceFactory
 			.getContextBean()
 			.getBeanContextServiceProviderBeanInfo();//(3)
-	//Thats how folks in java world name classes right?</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/scalatex/tree/master/generics/src/main/resources/Variance.java#L29-L38" target="_blank"><i class="fa fa-link "></i></a></pre>
+	//Thats how folks in java world name classes right?</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/tree/master/scalatex/generics/src/main/resources/Variance.java#L29-L38" target="_blank"><i class="fa fa-link "></i></a></pre>
       <p>
         Line (1),(2),(3) would throw a ArrayStoreException at runtime. Why? because if it doesn't, then this will:</p>
       <pre><code class="scala scalatex-site-Styles-highlightMe">Dog d = dogs[1];
@@ -268,7 +268,7 @@ List&lt;? super Dog&gt; dog;
         <div style="width: 50%;float: left;">
           <pre class=" scalatex-site-Styles-hoverContainer"><code class="java scalatex-site-Styles-highlightMe">ArrayList&lt;String&gt;[] ls = 
 	new ArrayList&lt;String&gt;[3];
-//Above is illegal in Java.</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/scalatex/tree/master/generics/src/main/resources/Variance.java#L42-L45" target="_blank"><i class="fa fa-link "></i></a></pre></div>
+//Above is illegal in Java.</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/tree/master/scalatex/generics/src/main/resources/Variance.java#L42-L45" target="_blank"><i class="fa fa-link "></i></a></pre></div>
         <div style="width: 50%;float: left;">
           <hr /><div style="opacity: 0.6;font-style: oblique;">
             <pre class=" scalatex-site-Styles-hoverContainer"><code class="java scalatex-site-Styles-highlightMe">//If it was allowed, you could do:
@@ -279,7 +279,7 @@ ob[0] = new ArrayList&lt;Animal&gt;();
 ArrayList&lt;String&gt; s = ls[0];
 String name = s.get(0); 
 //BOOM! BOOM! ClassCastException
-//s.get(0) will return an Animal and not String		</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/scalatex/tree/master/generics/src/main/resources/Variance.java#L46-L55" target="_blank"><i class="fa fa-link "></i></a></pre></div><hr /></div><div style="clear: both;"></div></div>
+//s.get(0) will return an Animal and not String		</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/tree/master/scalatex/generics/src/main/resources/Variance.java#L46-L55" target="_blank"><i class="fa fa-link "></i></a></pre></div><hr /></div><div style="clear: both;"></div></div>
       <p>
         Hence the compiler does not let you create arrays of generic classes. Though there is an exception:
         <pre><code class="scala scalatex-site-Styles-highlightMe">ArrayList&lt;?&gt;[] ls = new ArrayList&lt;?&gt;[0];</code></pre>
@@ -304,12 +304,12 @@ String name = s.get(0);
       <pre class=" scalatex-site-Styles-hoverContainer"><code class="java scalatex-site-Styles-highlightMe">class Outer{
   //Aim is to capture the type of generic type below. i.e. String
   List&lt;String&gt; ls = new ArrayList&lt;String&gt;();
-}</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/scalatex/tree/master/generics/src/main/java/GetType.java#L3-L7" target="_blank"><i class="fa fa-link "></i></a></pre>
+}</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/tree/master/scalatex/generics/src/main/java/GetType.java#L3-L7" target="_blank"><i class="fa fa-link "></i></a></pre>
       <pre class=" scalatex-site-Styles-hoverContainer"><code class="java scalatex-site-Styles-highlightMe">Field field = Outer.class.getDeclaredField(&quot;ls&quot;);
 ParameterizedType p = (ParameterizedType) field.getGenericType();
 Class&lt;?&gt; claz = (Class&lt;?&gt;)p.getActualTypeArguments()[0];
 System.out.println(claz);
-// prints class java.lang.String</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/scalatex/tree/master/generics/src/main/java/GetType.java#L12-L17" target="_blank"><i class="fa fa-link "></i></a></pre>
+// prints class java.lang.String</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/tree/master/scalatex/generics/src/main/java/GetType.java#L12-L17" target="_blank"><i class="fa fa-link "></i></a></pre>
 
       <p>
         Once you have <code>claz</code> variable, you can then create its instances. Lets go a step ahead...</p>
@@ -323,7 +323,7 @@ static void test6() {
     SubClass test6 = new SubClass();
     Class&lt;?&gt; type = (Class&lt;?&gt;)test6.getTypeParam();
     equals(type, Integer.class);
-}</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/scalatex/tree/master/generics/src/main/java/types/UseCases.java#L49-L57" target="_blank"><i class="fa fa-link "></i></a></pre>
+}</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/tree/master/scalatex/generics/src/main/java/types/UseCases.java#L49-L57" target="_blank"><i class="fa fa-link "></i></a></pre>
       <p>
         So now we are able to get Integer.class object at runtime. Some more bazooka stuff:</p>
       <pre class=" scalatex-site-Styles-hoverContainer"><code class="java scalatex-site-Styles-highlightMe">class X&lt;T&gt; extends CaptureType&lt;T&gt; {}
@@ -340,14 +340,14 @@ void test7() {
     equals(parameters.get(1).getParameters().get(0).getRawType(), List.class);
     equals(parameters.get(1).getParameters().get(0).getParameters().get(0).getRawType(), List.class);
     equals(parameters.get(1).getParameters().get(0).getParameters().get(0).getParameters().get(0).getRawType(), Integer.class);
-}</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/scalatex/tree/master/generics/src/main/java/types/UseCases.java#L60-L75" target="_blank"><i class="fa fa-link "></i></a></pre>
+}</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/tree/master/scalatex/generics/src/main/java/types/UseCases.java#L60-L75" target="_blank"><i class="fa fa-link "></i></a></pre>
       <p>
         Works! This is what <a href="http://mockito.org/">mockito</a> exactly does (In fact <code>CaptureType</code> was inspired from mockito).
         Though there are some limitations:</p>
       <pre class=" scalatex-site-Styles-hoverContainer"><code class="java scalatex-site-Styles-highlightMe">class Sample&lt;T&gt; extends CaptureType&lt;T&gt; {}
 
 Sample&lt;String&gt; sample = new Sample&lt;String&gt;();
-sample.getRawType(); //Will throw exception</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/scalatex/tree/master/generics/src/main/resources/Wontwork.java#L0-L5" target="_blank"><i class="fa fa-link "></i></a></pre>
+sample.getRawType(); //Will throw exception</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/tree/master/scalatex/generics/src/main/resources/Wontwork.java#L0-L5" target="_blank"><i class="fa fa-link "></i></a></pre>
       <p>
         Please look at the <a href="https://gist.github.com/purijatin/a0486995c7df0e56b398">source</a> to know more.
 
