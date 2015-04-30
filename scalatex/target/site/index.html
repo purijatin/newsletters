@@ -325,7 +325,7 @@ static void test6() {
     equals(type, Integer.class);
 }</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/scalatex/tree/master/generics/src/main/java/types/UseCases.java#L49-L57" target="_blank"><i class="fa fa-link "></i></a></pre>
       <p>
-        So now we are able to get Integer.class object at runtime. Lets now try some bazooka stuff:</p>
+        So now we are able to get Integer.class object at runtime. Some more bazooka stuff:</p>
       <pre class=" scalatex-site-Styles-hoverContainer"><code class="java scalatex-site-Styles-highlightMe">class X&lt;T&gt; extends CaptureType&lt;T&gt; {}
 class Y&lt;A, B&gt; extends X&lt;B&gt; {}
 class Z&lt;Q&gt; extends Y&lt;Q, Map&lt;Integer, List&lt;List&lt;List&lt;Integer&gt;&gt;&gt;&gt;&gt; {}

@@ -240,7 +240,7 @@
         Some use cases:
       @hl.ref(wd/'generics/'src/'main/'java/'types/"UseCases.java", start="Example<S>",end="//end")       
       @p
-        So now we are able to get Integer.class object at runtime. Lets now try some bazooka stuff:
+        So now we are able to get Integer.class object at runtime. Some more bazooka stuff:
       @hl.ref(wd/'generics/'src/'main/'java/'types/"UseCases.java", start="X<T>",end="//end")
       @p
         Works! This is what @a("mockito",href:="http://mockito.org/") exactly does (In fact @code{CaptureType} was inspired from mockito).
