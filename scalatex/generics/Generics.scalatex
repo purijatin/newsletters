@@ -90,10 +90,10 @@
         @p
             An alternative way to implement generics is using a process called Heterogenous Translation. Languages like C++ and C# have a provision where they create a specialized class for each instantiation of a template.
             An example of this in Java, is something called @b{Specializations} to be introduced in java9 under @a("Project-Valhalla",href:="http://openjdk.java.net/projects/valhalla/")
-        @hl.ref(wd/'generics/'src/'main/'resources/"Java9.java",start="ls1", end="//end")
+        @hl.ref(wd/'generics/'src/'main/'resources/"Java9.java")
         @p
-            Now this means compiler not only provides type safety at compile-time but the Parametric Types are also embedded at runtime. 
-            Above @code{List<int>} is aware of it being a list of @code{int's}. The information is not erased. (Though this functionality will only be available only for primitives and value classes (Yes! the same value classes of the functional world))
+            Notice @code{List<int>.class} prints @b{java.anyutil.List${0=I}} and @code{java.util.List.class} prints @b{java.util.List}. This means information about Parametric Types are also embedded at runtime. 
+            @code{List<int>} is aware of it being a list of @code{int's}. The information is not erased. (Though this functionality will only be available only for primitives and value classes in Java9)
 
         @p
             This ability to contain the type information at runtime is called @code{reifiability}. In Java all primitives, non-generic classes are reifiable (More details in @a("JLS",href:="https://docs.oracle.com/javase/specs/jls/se7/html/jls-4.html#jls-4.7")). Another classic example are @code{Arrays} in Java:
@@ -109,7 +109,7 @@
             Generics in java were introduced in java5. They are erased for so as to be compatible with pre-java5 code. 
         @hl.scala
             public void get(List ls){}
-            get(new ArrayList<Animal>()) //This would have not compiled if the types were reified as then the byte-code would have changed
+            get(new ArrayList<Animal>()) //This would not have compiled if the types were reified as then the byte-code would have changed
         @p
             Type-Erasure has been a vital success on JVM. More so as other JVM languages like Groovy, Clojure, Scala, Kotlin etc have been able to do their innovation with no limitation on the runtime-side. 
             This would had certainly not been possible if generics were reified. To explain further: @u{Being able to inspect types at runtime undermines the knowledge you have about types at compile time}.
@@ -137,7 +137,7 @@
         We will now see sub-typing influences generics and its influence on class design.
   @sect{Variance}
     @p
-      This is as intense as it can get, but hold on. It is the one ring to rule them all in Java Generics world.
+      This is as intense as it can get, but hold on. It is the one ring to rule them all in Generics world.
     @sect{Co-Variance}
       @p 
         Let @code{M<X>} be a class with @code{X} as its generic type. @code{M} is said to be co-variant with its generic type if:
@@ -222,6 +222,34 @@
         Without arrays being co-variant it would had been impossible to have a sort method, which could take any kind of arrays to sort (Remember there was no generics then, so the only way to be able to take all kinds of array as argument was to make them co-variant). Obviously many modern languages have marked Arrays as invariant. 
       @p 
         Another important insight we get from above experience is: @b{Co-variance might not go well with mutability}
+  @hr
+  @sect{More Interesting Stuff}
+    @p 
+      Mind You! Some super awesome stuff on the way. Chuck everything on this page, this is breaking the barrior!
+    @sect{Capture Type}
+      @p
+        Is it possible to obtain @u{information about generic types at runtime?}. Well it is possible, but its dirty:
+      
+      @hl.ref(wd/'generics/'src/'main/'java/"GetType.java",start="Outer",end="//end")           
+      @hl.ref(wd/'generics/'src/'main/'java/"GetType.java",start="Field",end="//end")           
+      
+      @p
+        Once you have @code{claz} variable, you can then create its instances. Lets go a step ahead... 
+      @p 
+        Low lets try building a class which will make it very easy to access parametric type information. I have called the class @a("CaptureType",href:="https://gist.github.com/purijatin/a0486995c7df0e56b398") and it lets you @u{capture the generic type of a parametrized class}.
+        Some use cases:
+      @hl.ref(wd/'generics/'src/'main/'java/'types/"UseCases.java", start="Example<S>",end="//end")       
+      @p
+        So now we are able to get Integer.class object at runtime. Lets now try some bazooka stuff:
+      @hl.ref(wd/'generics/'src/'main/'java/'types/"UseCases.java", start="X<T>",end="//end")
+      @p
+        Works! This is what @a("mockito",href:="http://mockito.org/") exactly does (In fact @code{CaptureType} was inspired from mockito).
+        Though there are some limitations:
+      @hl.ref(wd/'generics/'src/'main/'resources/"Wontwork.java")
+      @p 
+        Please look at the @a("source",href:="https://gist.github.com/purijatin/a0486995c7df0e56b398") to know more.
+
+
         
 
 

@@ -29,11 +29,11 @@ public class Variance{
 	}
 	public void arrays(){
 		Dog[] dogs = new Dog[3];
-		Animal[] ob = dogs; //line-a
+		Animal[] ob = dogs; //because of array covariance. line-a
 		ob[0] = new Cat(); //(1)
 		ob[1] = "";//(2)
 		ob[2] = SimpleBeanFactoryAwareAspectInstanceFactory
-				.getBean()
+				.getContextBean()
 				.getBeanContextServiceProviderBeanInfo();//(3)
 		//Thats how folks in java world name classes right?
 		//end
