@@ -25,8 +25,7 @@
 @def half(frags: Frag*) = div(frags, width:="50%", float.left)
 
 @sect("Polymorphism")
-  @p
-    I wrote a book by accident. Get some coffee first.
+
   @p
     	Parametric Polymorphism is the ability to express data and functions over an abstract type but without specifying it. It is powerful in a sense that it lets you model behavior effectively.
 
@@ -34,33 +33,33 @@
   		Different languages have chosen different tradeoffs between code footprint and abstraction to implement Parametric Polymorphism, hence giving rise to different flavors in implementation.
   		Java's type system is not as expressive as one would like it to be, but never the less has a mechanism to do Parametric Polymorphism with a construct called @code{Generics}.
 
-  @sect{Generics}
-    @p 
-        Generics are called and implemented differently in different languages. Two of the well known implementations are using:
+@sect{Generics}
+  @p 
+      Generics are called and implemented differently in different languages. Two of the well known implementations are using:
 
-    @sect{Type Erasure} 
-        @p 
-            Compiler by a process called as Homogeneous Translation erases all possible reference translations of a class at compile time to one class at runtime. 
-            This is what Java compiler also does:
-        @pairs
-          @half
-            @hl.scala
-              List<Dog> ls = new ArrayList<Dog>()
-              List<Long> ls = new ArrayList<Long>()
-          @half
-            @exampleWrapper
-               @p
-                At runtime, both the statements on left gets converted to:
-               @hl.scala
+  @sect{Type Erasure} 
+      @p 
+          Compiler by a process called as Homogeneous Translation erases all possible reference translations of a class at compile time to one class at runtime. 
+          This is what Java compiler also does:
+      @pairs
+        @half
+          @hl.scala
+            List<Dog> ls = new ArrayList<Dog>()
+            List<Long> ls = new ArrayList<Long>()
+        @half
+          @exampleWrapper
+             @p
+              At runtime, both the statements on left gets converted to:
+             @hl.scala
                 List ls = new ArrayList();
 
-        @p
-            This technique is called as Type Erasure. Simply put, generics are a compile-time creation and runtime has no clue about their existence. 
-            Compiler provides adequate type-safety at compile time but @code{erases} them at runtime. 
-        @p
-            In Java8, there is no special byte-code for Generic classes or generic methods. They dont exist in reality
-            This also means, it is difficult to know the exact generic type of list at runtime. (Not impossible though. See below). As a side-effect:
-        @div
+      @p
+          This technique is called as Type Erasure. Simply put, generics are a compile-time creation and runtime has no clue about their existence. 
+          Compiler provides adequate type-safety at compile time but @code{erases} them at runtime. 
+      @p
+          In Java8, there is no special byte-code for Generic classes or generic methods. They dont exist in reality
+          This also means, it is difficult to know the exact generic type of list at runtime. (Not impossible though. See below). As a side-effect:
+      @div
         @hl.highlight(
           """  public void evaluate(List<Integer> ls)
   public void evaluate(List<String> ls)
@@ -71,51 +70,48 @@
           "scala"
         )     
 
-        @p
-          Nor can you do below:
-        @div
-          @hl.highlight(
+      @p
+        Nor can you do below:
+      @div
+        @hl.highlight(
             """  class Sample<T>{
     T ob = new T(); //not possible
  }""",
             "scala"
           ) 
 
-        @p
-          Never the less Type-Erasure has been a vital reason for the success of JVM (more on it below)
-        @p
-
-    @sect{Reification}
-
-        @p
-            An alternative way to implement generics is using a process called Heterogenous Translation. Languages like C++ and C# have a provision where they create a specialized class for each instantiation of a template.
-            An example of this in Java, is something called @b{Specializations} to be introduced in java9 under @a("Project-Valhalla",href:="http://openjdk.java.net/projects/valhalla/")
-        @hl.ref(wd/'generics/'src/'main/'resources/"Java9.java")
-        @p
-            Notice @code{List<int>.class} prints @b{java.anyutil.List${0=I}} and @code{java.util.List.class} prints @b{java.util.List}. This means information about Parametric Types are also embedded at runtime. 
-            @code{List<int>} is aware of it being a list of @code{int's}. The information is not erased. (Though this functionality will only be available only for primitives and value classes in Java9)
-
-        @p
-            This ability to contain the type information at runtime is called @code{reifiability}. In Java all primitives, non-generic classes are reifiable (More details in @a("JLS",href:="https://docs.oracle.com/javase/specs/jls/se7/html/jls-4.html#jls-4.7")). Another classic example are @code{Arrays} in Java:
-        @pairs
-            @half
-              @hl.ref(wd/'generics/'src/'main/'java/"Reify.java", start="Dog[]", end="//end")
-            @half
-              @exampleWrapper
-                @hl.ref(wd/'generics/'src/'main/'java/"Animal.java")        
-            
-        @hr
-        @p
-            Generics in java were introduced in java5. They are erased for so as to be compatible with pre-java5 code. 
-        @hl.scala
-            public void get(List ls){}
-            get(new ArrayList<Animal>()) //This would not have compiled if the types were reified as then the byte-code would have changed
-        @p
-            Type-Erasure has been a vital success on JVM. More so as other JVM languages like Groovy, Clojure, Scala, Kotlin etc have been able to do their innovation with no limitation on the runtime-side. 
-            This would had certainly not been possible if generics were reified. To explain further: @u{Being able to inspect types at runtime undermines the knowledge you have about types at compile time}.
-            We will see more on this later.
+      @p
+        Never the less Type-Erasure has been a vital reason for the success of JVM (more on it below)
+      @p
+  @sect{Reification}
+      @p
+          An alternative way to implement generics is using a process called Heterogenous Translation. Languages like C++ and C# have a provision where they create a specialized class for each instantiation of a template.
+          An example of this in Java, is something called @b{Specializations} to be introduced in java9 under @a("Project-Valhalla",href:="http://openjdk.java.net/projects/valhalla/")
+      @hl.ref(wd/'generics/'src/'main/'resources/"Java9.java")
+      @p
+          Notice @code{List<int>.class} prints @b{java.anyutil.List${0=I}} and @code{java.util.List.class} prints @b{java.util.List}. This means information about Parametric Types are also embedded at runtime. 
+          @code{List<int>} is aware of it being a list of @code{int's}. The information is not erased. (Though this functionality will only be available only for primitives and value classes in Java9)
+      @p
+          This ability to contain the type information at runtime is called @code{reifiability}. In Java all primitives, non-generic classes are reifiable (More details in @a("JLS",href:="https://docs.oracle.com/javase/specs/jls/se7/html/jls-4.html#jls-4.7")). Another classic example are @code{Arrays} in Java:
+      @pairs
+          @half
+            @hl.ref(wd/'generics/'src/'main/'java/"Reify.java", start="Dog[]", end="//end")
+          @half
+            @exampleWrapper
+              @hl.ref(wd/'generics/'src/'main/'java/"Animal.java")        
+          
+      @hr
+      @p
+          Generics in java were introduced in java5. They are erased for so as to be compatible with pre-java5 code. 
+      @hl.scala
+          public void get(List ls){}
+          get(new ArrayList<Animal>()) //This would not have compiled if the types were reified as then the byte-code would have changed
+      @p
+          Type-Erasure has been a vital success on JVM. More so as other JVM languages like Groovy, Clojure, Scala, Kotlin etc have been able to do their innovation with no limitation on the runtime-side. 
+          This would had certainly not been possible if generics were reified. To explain further: @u{Being able to inspect types at runtime undermines the knowledge you have about types at compile time}.
+          We will see more on this later.
                     
-  @sect{Sub-Typing (<:)}     
+@sect{Sub-Typing (<:)}     
     @p
       What do we mean when we say @b{Dog is a sub-type of Animal}?  
     @sect{Liskov Substitution}
@@ -161,30 +157,30 @@
       @hl.ref(wd/'generics/'src/'main/'resources/"Variance.java", start="List<Animal>", end="//end")        
       @p
         If you observe, a very interesting behavior pops up when you compare arrays and generics. @blockquote{@u{Arrays are covariant and generics are invariant. Why?}}The rest of this post will affirm on why generics are rightly invariant and the dangers posed by arrays by being covariant.
-  @sect{Raw type (?)}        
-    @p
-      @code{?} is a wild card or a hack. A wild-card can be read as @b{some unknown type}. So when we say:
-    @hl.scala
-      List<?> ls ;
-    @p It means `ls` is a list of some unknown type which we do not precisely know. Raw types are a bridge between pre and post Java5 code.
-    @pairs
-      @half
-        @hl.scala
-          List<Integer>  <:  List<?>
-          List<?>  <: List
-          // Hence by transitivity,          
-          List<Integer> <: List
-      @half
-        @exampleWrapper
+    @sect{Raw type (?)}        
+      @p
+        @code{?} is a wild card or a hack. A wild-card can be read as @b{some unknown type}. So when we say:
+      @hl.scala
+        List<?> ls ;
+      @p It means `ls` is a list of some unknown type which we do not precisely know. Raw types are a bridge between pre and post Java5 code.
+        @pairs
+        @half
           @hl.scala
-            List<?> ls = new ArrayList<Integer>();
-            List ls2 = ls;
-            // Hence by transitivity,
-            List ls3 = new ArrayList<Integer>();
-    @p 
-      This sub-typing relationship made post java-5 code backward compatible. Wild cards are only possible in a language where generics are implemented using erasure. List<?> would make no sense in reifiable world (what would it mean at runtime?)
-      Java's type system does not give a provison to have co-variant and contra-variant generic classess. But willd card's let you provide bounds, thus enabling co-variance and contra-variance behavior @i{like} in Java (Frankly the experience is far from right):
-    @hl.ref(wd/'generics/'src/'main/'resources/"Variance.java", start="List<?>", end="//end")        
+            List<Integer>  <:  List<?>
+            List<?>  <: List
+            // Hence by transitivity,          
+            List<Integer> <: List
+        @half
+          @exampleWrapper
+            @hl.scala
+              List<?> ls = new ArrayList<Integer>();
+              List ls2 = ls;
+              // Hence by transitivity,
+              List ls3 = new ArrayList<Integer>();
+      @p 
+        This sub-typing relationship made post java-5 code backward compatible. Wild cards are only possible in a language where generics are implemented using erasure. List<?> would make no sense in reifiable world (what would it mean at runtime?)
+        Java's type system does not give a provison to have co-variant and contra-variant generic classess. But willd card's let you provide bounds, thus enabling co-variance and contra-variance behavior @i{like} in Java (Frankly the experience is far from right):
+      @hl.ref(wd/'generics/'src/'main/'resources/"Variance.java", start="List<?>", end="//end")        
   @sect{Case-Studies}
     @sect{Co-Variant Arrays}
       @p
@@ -220,10 +216,61 @@
         Without arrays being co-variant it would had been impossible to have a method like sort, which could take any kind of arrays(Remember there was no generics then, so the only way to be able to take all kinds of array as argument was to make them co-variant). Obviously many modern languages have marked Arrays as invariant and use generics to exhibit parametric polymorphism. (i.e. @code{String[]} becomes @code{Array<String>})
       @p 
         An important insight we get from above experience is: @b{Co-variance might not go well with mutability}
-    @sect{Reads & Writes}    
-      @sect{Reads}
+    @sect{Writes & Reads}    
+      @sect{Writes}
         @p
-          Hi
+          Lets look at some examples. @b{All the commented ones represent a compiler error}:
+        @hl.ref(wd/'generics/'src/'main/'java/"Writes.java", start="contravariant", end="//end")  
+        @p 
+          @code{ls1} is a list of some unknown type. This unknown type is a super type of @code{Animal}. When we try adding elements to 
+          this list, the @code{add} method becomes:
+        @hl.scala
+          public void add((? super Animal) elem)
+        @p
+          So now you can pass any element of a type say @code{t} to @code{add} such that, @code{t <: (? super Animal)}. And:
+        @hl.scala
+          Animal <: (? super Animal)
+          Dog <: (? super Animal)
+          //Object is not a super type of (? extends Animal). Hence ls1.add(new Object()) gives error
+        @p
+          Some more examples:
+        @hl.ref(wd/'generics/'src/'main/'java/"Writes.java", start="ls2", end="//end")  
+        @hr
+        @p
+          Some examples with covariant variables
+        @hl.ref(wd/'generics/'src/'main/'java/"Writes.java", start="covariant", end="//end")  
+        @p 
+          @code{ls1} is a list of some unknown type. This unknown type is a sub type of @code{Animal}. When we try adding elements to 
+          this list, the @code{add} method becomes:
+        @hl.scala
+          public void add((? extends Animal) elem)
+        @p
+          So now you can pass any element of a type say @code{t} to @code{add} such that, @code{t <: (? extends Animal)}. When we say @code{? extends Animal},
+          we mean some unknown type which is a subtype of Animal. Unless we do not know this unknown type, it is impossible to find @code{t} which is subtype of this unknown type.
+          Hence the compiler gives error for @code{ls1.add(new Dog())} and so. Some more brain teasers:
+        @hl.ref(wd/'generics/'src/'main/'java/"Writes.java", start="ls2", end="//end")  
+        @p
+          After all the above examples, it is apparent that:
+        @blockquote{@u{Contra-Variance are great when it comes to consuming something. Co-variance is horrible in those cases}}
+      @sect{Reads}
+        @hl.ref(wd/'generics/'src/'main/'java/"Reads.java", start="covariant", end="//end")  
+        @p
+          @code{ls1} is a list of some unknown type. This unknown type extends @code{Animal}. When we try to do @code{ls2.get(0)}, it returns a variable of type @code{? extends Animal}.
+          So the refernce type of the variable which gets it has to be:
+        @hl.scala
+            (? extends Animal) <: The type t of reference variable
+        @p
+            This means all types equal to @code{Animal} and above are suitable to get it. Hence it workds for @code{Animal} & @code{Object} but not @code{Dog}. Some other brain teasers:
+        @hl.ref(wd/'generics/'src/'main/'java/"Reads.java", start="ls2", end="//end")  
+        @p
+          Another interesting insight from above:
+        @blockquote{@u{Co-variance are greate when it comes to producing. Contra-Variance is horrible in those case}}        
+        @p
+          Summing above experiences: 
+
+        @blockquote{@u{@b{Co-Variance is great for producing. Contra-Variance is great for consuming}}}         
+
+          
   @hr
   @sect{More Interesting Stuff}
     @p 

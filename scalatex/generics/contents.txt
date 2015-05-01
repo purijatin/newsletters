@@ -14,7 +14,7 @@ Generics:
 			Using notation.
 			Array Example		
 			ability to do above using wild-cards
-			Numorous example showcasing above. Writes and Reads
+			Numorous example showcasing above. Writes and Writes
 			Class design using them.
 				Examples: Collections.max, Collections.copy, Collectors.
 			Assignment: Design Function
