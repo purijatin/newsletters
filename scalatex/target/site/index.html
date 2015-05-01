@@ -207,12 +207,12 @@ Object[] objects = dog; // Dog[] &lt;: Animal[]</code><a class=" scalatex-site-S
 </code></pre>
     <h1 id="In-Variance" style="display: block;" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><a class=" scalatex-site-Styles-headerLink" href="#In-Variance" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a>In-Variance</h1>
       <p>
-        If class is neither co-varianct nor contra-variant in its generic type, then it is invariant. Generics (without usage of wild-card) in java are invariant.</p>
+        If generic class is neither co-varianct nor contra-variant then it is invariant. Generics in Java are Invariant.</p>
       <pre class=" scalatex-site-Styles-hoverContainer"><code class="java scalatex-site-Styles-highlightMe">List&lt;Animal&gt; ls = new ArrayList&lt;Dog&gt;(); // co-variance. Invalid in Java
 List&lt;Dog&gt; ls = new ArrayList&lt;Animal&gt;(); // contra-variance. Invalid in Java
 List&lt;Animal&gt; ls = new ArrayList&lt;Animal&gt;(); // in-variant. valid.</code><a class=" scalatex-site-Styles-headerLink" style="position: absolute;right: 0.5em;top: 0.5em;display: block;font-size: 24px;" href="https://github.com/purijatin/newsletters/tree/master/scalatex/generics/src/main/resources/Variance.java#L12-L15" target="_blank"><i class="fa fa-link "></i></a></pre>
-      <p></p>
-      	Java's type system does not give a provison to have co-variant and contra-variant generic classess. Yet there is a provison to almost provide them using wildcards (Frankly the experience is far from right)
+      <p>
+        If you observe, a very interesting behavior pops up when you compare arrays and generics. <blockquote><u>Arrays are covariant and generics are invariant. Why?</u></blockquote>The rest of this post will affirm on why generics are rightly invariant and the dangers posed by arrays by being covariant.</p>
   <div style="margin: 0px;color: #333;text-align: center;padding: 2.5em 2em 0;border-bottom: 1px solid #eee;display: block;" id="Rawtype(?)" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><h1 style="margin: 0.2em 0;font-size: 3em;font-weight: 300;" id="Rawtype(?)">Raw type (?)<a class=" scalatex-site-Styles-headerLink" href="#Rawtype(?)" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a></h1><br /></div>
     <p>
       <code>?</code> is a wild card or a hack. A wild-card can be read as <b>some unknown type</b>. So when we say:</p>
@@ -232,7 +232,7 @@ List ls2 = ls;
 List ls3 = new ArrayList&lt;Integer&gt;();</code></pre></div><hr /></div><div style="clear: both;"></div></div>
     <p>
       This sub-typing relationship made post java-5 code backward compatible. Wild cards are only possible in a language where generics are implemented using erasure. List&lt;?&gt; would make no sense in reifiable world (what would it mean at runtime?)
-      Wild card's also let you provide bounds, thus enabling co-variance and contra-variance behavior in Java:</p>
+      Java's type system does not give a provison to have co-variant and contra-variant generic classess. But willd card's let you provide bounds, thus enabling co-variance and contra-variance behavior <i>like</i> in Java (Frankly the experience is far from right):</p>
     <pre class=" scalatex-site-Styles-hoverContainer"><code class="java scalatex-site-Styles-highlightMe">List&lt;?&gt; ls ;// ls is a list of some unknown type. 
 List&lt;? extends Dog&gt; dog; // dog is a list of elements of some unknown type.
 // In java, all reference types extends Object. So now we know that:
@@ -259,10 +259,8 @@ List&lt;? super Dog&gt; dog;
       <pre><code class="scala scalatex-site-Styles-highlightMe">Dog d = dogs[1];
 //BOOM! ClassCastException</code></pre>
       <p>
-        <u>Shouldn't the compiler have caught this wrong doing at compile time?</u>. There is no point of static-typing if the compiler cant prevent these.
-        Turns out the culprit is making arrays as <code>co-variant</code>. i.e. the ability to do <code>Animal[] ob = dogs</code> at line-a has put us in trouble.
-</p>
-      <p>
+        <u>Shouldn't the compiler have caught this wrong doing (i.e. Line(1),(2),(3))) at compile time?</u>.
+        The culprit is making arrays as <code>co-variant</code>. i.e. the ability to do <code>Animal[] ob = dogs</code> at line-a has put us in trouble.
         Co-Variant Arrays are also a reason why arrays of generic classes are illegal:</p>
       <div>
         <div style="width: 50%;float: left;">
@@ -290,9 +288,13 @@ String name = s.get(0);
         Co-Variant Arrays is language blunder. In one of the talks, Martin Odersky had mentioned that this decision was made as a tradeoff to be able to do below in initial java version:</p>
       <pre><code class="scala scalatex-site-Styles-highlightMe">public static void sort(Object[] a) //Arrays.sort</code></pre>
       <p>
-        Without arrays being co-variant it would had been impossible to have a sort method, which could take any kind of arrays to sort (Remember there was no generics then, so the only way to be able to take all kinds of array as argument was to make them co-variant). Obviously many modern languages have marked Arrays as invariant.</p>
+        Without arrays being co-variant it would had been impossible to have a method like sort, which could take any kind of arrays(Remember there was no generics then, so the only way to be able to take all kinds of array as argument was to make them co-variant). Obviously many modern languages have marked Arrays as invariant and use generics to exhibit parametric polymorphism. (i.e. <code>String[]</code> becomes <code>Array&lt;String&gt;</code>)</p>
       <p>
-        Another important insight we get from above experience is: <b>Co-variance might not go well with mutability</b></p>
+        An important insight we get from above experience is: <b>Co-variance might not go well with mutability</b></p>
+    <h1 id="Reads&amp;Writes" style="display: block;" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><a class=" scalatex-site-Styles-headerLink" href="#Reads&amp;Writes" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a>Reads &amp; Writes</h1>
+      <h2 id="Reads" style="display: block;" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><a class=" scalatex-site-Styles-headerLink" href="#Reads" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a>Reads</h2>
+        <p>
+          Hi</p>
   <hr />
   <div style="margin: 0px;color: #333;text-align: center;padding: 2.5em 2em 0;border-bottom: 1px solid #eee;display: block;" id="MoreInterestingStuff" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><h1 style="margin: 0.2em 0;font-size: 3em;font-weight: 300;" id="MoreInterestingStuff">More Interesting Stuff<a class=" scalatex-site-Styles-headerLink" href="#MoreInterestingStuff" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a></h1><br /></div>
     <p>
@@ -366,7 +368,7 @@ sample.getRawType(); //Will throw exception</code><a class=" scalatex-site-Style
 </p></div>
 </div><script>
     scalatex.scrollspy.Controller().main(
-      [{"value":"Polymorphism","children":[{"value":"Generics","children":[{"value":"Type Erasure","children":[]},{"value":"Reification","children":[]}]},{"value":"Sub-Typing (<:)","children":[{"value":"Liskov Substitution","children":[]}]},{"value":"Variance","children":[{"value":"Co-Variance","children":[]},{"value":"Contra-Variance","children":[]},{"value":"In-Variance","children":[]}]},{"value":"Raw type (?)","children":[]},{"value":"Case-Studies","children":[{"value":"Co-Variant Arrays","children":[]}]},{"value":"More Interesting Stuff","children":[{"value":"Capture Type","children":[]}]}]}]
+      [{"value":"Polymorphism","children":[{"value":"Generics","children":[{"value":"Type Erasure","children":[]},{"value":"Reification","children":[]}]},{"value":"Sub-Typing (<:)","children":[{"value":"Liskov Substitution","children":[]}]},{"value":"Variance","children":[{"value":"Co-Variance","children":[]},{"value":"Contra-Variance","children":[]},{"value":"In-Variance","children":[]}]},{"value":"Raw type (?)","children":[]},{"value":"Case-Studies","children":[{"value":"Co-Variant Arrays","children":[]},{"value":"Reads & Writes","children":[{"value":"Reads","children":[]}]}]},{"value":"More Interesting Stuff","children":[{"value":"Capture Type","children":[]}]}]}]
   )</script><script>
     ['DOMContentLoaded', 'load'].forEach(function(ev){
       addEventListener(ev, function(){

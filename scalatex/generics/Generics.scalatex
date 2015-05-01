@@ -157,10 +157,10 @@
       
     @sect{In-Variance}  
       @p 
-        If class is neither co-varianct nor contra-variant in its generic type, then it is invariant. Generics (without usage of wild-card) in java are invariant.
+        If generic class is neither co-varianct nor contra-variant then it is invariant. Generics in Java are Invariant.
       @hl.ref(wd/'generics/'src/'main/'resources/"Variance.java", start="List<Animal>", end="//end")        
       @p
-      	Java's type system does not give a provison to have co-variant and contra-variant generic classess. Yet there is a provison to almost provide them using wildcards (Frankly the experience is far from right)
+        If you observe, a very interesting behavior pops up when you compare arrays and generics. @blockquote{@u{Arrays are covariant and generics are invariant. Why?}}The rest of this post will affirm on why generics are rightly invariant and the dangers posed by arrays by being covariant.
   @sect{Raw type (?)}        
     @p
       @code{?} is a wild card or a hack. A wild-card can be read as @b{some unknown type}. So when we say:
@@ -183,7 +183,7 @@
             List ls3 = new ArrayList<Integer>();
     @p 
       This sub-typing relationship made post java-5 code backward compatible. Wild cards are only possible in a language where generics are implemented using erasure. List<?> would make no sense in reifiable world (what would it mean at runtime?)
-      Wild card's also let you provide bounds, thus enabling co-variance and contra-variance behavior in Java:
+      Java's type system does not give a provison to have co-variant and contra-variant generic classess. But willd card's let you provide bounds, thus enabling co-variance and contra-variance behavior @i{like} in Java (Frankly the experience is far from right):
     @hl.ref(wd/'generics/'src/'main/'resources/"Variance.java", start="List<?>", end="//end")        
   @sect{Case-Studies}
     @sect{Co-Variant Arrays}
@@ -196,10 +196,8 @@
         Dog d = dogs[1];
         //BOOM! ClassCastException
       @p
-        @u{Shouldn't the compiler have caught this wrong doing at compile time?}. There is no point of static-typing if the compiler cant prevent these.
-        Turns out the culprit is making arrays as @code{co-variant}. i.e. the ability to do @code{Animal[] ob = dogs} at line-a has put us in trouble.
-
-      @p
+        @u{Shouldn't the compiler have caught this wrong doing (i.e. Line(1),(2),(3))) at compile time?}. 
+        The culprit is making arrays as @code{co-variant}. i.e. the ability to do @code{Animal[] ob = dogs} at line-a has put us in trouble.
         Co-Variant Arrays are also a reason why arrays of generic classes are illegal:
       @pairs
         @half
@@ -219,9 +217,9 @@
       @hl.scala
         public static void sort(Object[] a) //Arrays.sort
       @p
-        Without arrays being co-variant it would had been impossible to have a sort method, which could take any kind of arrays to sort (Remember there was no generics then, so the only way to be able to take all kinds of array as argument was to make them co-variant). Obviously many modern languages have marked Arrays as invariant. 
+        Without arrays being co-variant it would had been impossible to have a method like sort, which could take any kind of arrays(Remember there was no generics then, so the only way to be able to take all kinds of array as argument was to make them co-variant). Obviously many modern languages have marked Arrays as invariant and use generics to exhibit parametric polymorphism. (i.e. @code{String[]} becomes @code{Array<String>})
       @p 
-        Another important insight we get from above experience is: @b{Co-variance might not go well with mutability}
+        An important insight we get from above experience is: @b{Co-variance might not go well with mutability}
     @sect{Reads & Writes}    
       @sect{Reads}
         @p
