@@ -17,6 +17,9 @@ Generics:
 			Numorous example showcasing above. Writes and Writes
 			Class design using them.
 				Examples: Collections.max, Collections.copy, Collectors.
+			Examples:
+				public ArrayList(Collection<? extends E> c) 
+					
 			Assignment: Design Function
 
 		Type-Inference (Probable)
@@ -37,3 +40,4 @@ Generics:
 			i think map.get
 		Retain type: Use Class<?> of the parameter
 		Varargs
+		wild car dis existential type: https://docs.oracle.com/javase/specs/jls/se7/html/jls-4.html#jls-4.8

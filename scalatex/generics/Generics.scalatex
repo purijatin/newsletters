@@ -119,7 +119,7 @@
         @a("Liskov Substitution Principle",href:="http://www.cs.cmu.edu/afs/cs.cmu.edu/project/venari/papers/subtype-tr/paper.ps") tells that:
         @blockquote{If "A" extends "B" (A <: B), then all the things that can be done with "B" should also be legal with "A"}
       @p 
-        i.e. If Dog extends Animal, then the animal object can be legally replaceable by the dog object all through. 
+        An easier way to remember this is to think @code{A <: B} as @code{A is subset of B}.
       @p Glossary of notations:
       @ul
         @li 
@@ -157,7 +157,7 @@
       @hl.ref(wd/'generics/'src/'main/'resources/"Variance.java", start="List<Animal>", end="//end")        
       @p
         If you observe, a very interesting behavior pops up when you compare arrays and generics. @blockquote{@u{Arrays are covariant and generics are invariant. Why?}}The rest of this post will affirm on why generics are rightly invariant and the dangers posed by arrays by being covariant.
-    @sect{Raw type (?)}        
+    @sect{Wildcards (?)}        
       @p
         @code{?} is a wild card or a hack. A wild-card can be read as @b{some unknown type}. So when we say:
       @hl.scala
@@ -248,29 +248,167 @@
           So now you can pass any element of a type say @code{t} to @code{add} such that, @code{t <: (? extends Animal)}. When we say @code{? extends Animal},
           we mean some unknown type which is a subtype of Animal. Unless we do not know this unknown type, it is impossible to find @code{t} which is subtype of this unknown type.
           Hence the compiler gives error for @code{ls1.add(new Dog())} and so. Some more brain teasers:
-        @hl.ref(wd/'generics/'src/'main/'java/"Writes.java", start="ls2", end="//end")  
+        @hl.ref(wd/'generics/'src/'main/'java/"Writes.java", start="lls2", end="//end")  
         @p
           After all the above examples, it is apparent that:
         @blockquote{@u{Contra-Variance are great when it comes to consuming something. Co-variance is horrible in those cases}}
       @sect{Reads}
         @hl.ref(wd/'generics/'src/'main/'java/"Reads.java", start="covariant", end="//end")  
         @p
-          @code{ls1} is a list of some unknown type. This unknown type extends @code{Animal}. When we try to do @code{ls2.get(0)}, it returns a variable of type @code{? extends Animal}.
+          @code{ls1} is a list of some unknown type. This unknown type extends @code{Animal}. When we try to do @code{ls1.get(0)}, it returns a variable of type @code{? extends Animal}.
           So the refernce type of the variable which gets it has to be:
         @hl.scala
             (? extends Animal) <: The type t of reference variable
         @p
-            This means all types equal to @code{Animal} and above are suitable to get it. Hence it workds for @code{Animal} & @code{Object} but not @code{Dog}. Some other brain teasers:
+            This means all types equal to @code{Animal} and above are suitable to get it. Hence it workds for @code{Animal} & @code{Object} but not @code{Dog}. Some other similar cases:
         @hl.ref(wd/'generics/'src/'main/'java/"Reads.java", start="ls2", end="//end")  
+        @hr
+        @p
+          Examples with @code{? super}
+        @hl.ref(wd/'generics/'src/'main/'java/"Reads.java", start="contravariance", end="//end")  
+        @p
+          When we do @code{lls1.get(0)}, it returns variable of unknown type which is also a super type of @code{Animal}. So the reference type
+          which points to this variable has to be of type @code{t} such that
+        @hl.scala
+          (? super Animal) <: t
+        @p
+          Only one such @code{t} can exist, and that is @code{Object} class. Hence it gives errors at other lines. More cases:
+        @hl.ref(wd/'generics/'src/'main/'java/"Reads.java", start="lls2", end="//end")              
         @p
           Another interesting insight from above:
-        @blockquote{@u{Co-variance are greate when it comes to producing. Contra-Variance is horrible in those case}}        
+        @blockquote{@u{Co-variance are greate when it comes to producing/reads. Contra-Variance is horrible in those case}}        
+        @hr
         @p
-          Summing above experiences: 
+          Summing above experiences:         
+        @blockquote{@u{@b{Co-Variance is great for producing/reads. Contra-Variance is great for consuming/writes}}}    
+        @hr
+        @p 
+          Some more brain teasers:
+        @hl.ref(wd/'generics/'src/'main/'java/"Writes.java", start="ls4", end="//end")         
+    
+    @sect{Library Examples}
+      @p
+        After knowing the stregths and weeknesses of covariance and contravariance, lets see their impact on class design in several classes in JDK        
+      @sect{ArrayList}
+        @sect{foreach}
+          @p 
+            If we were to design @code{foreach} method in class @code{ArrayList<T>}, how would it be? @code{foreach} is like a side-effect, you pass the element of the list iteratively to extenal consumer.
+            The first simplest option would be to:
+          @hl.scala
+            public void forEach(Consumer<T> action)   
+          @p
+            This does the job, but it levies an unnecessary constraint on generic type of @code{Consumer} to be as same type @code{T} of List.
+            What if we wanted to do this:
+          @hl.ref(wd/'generics/'src/'main/'java/"Lib.java", start="fe", end="//end")           
+          @p 
+            This would throw error with our definition of @code{foreach}. And it shouldn't. So lets improvize. Let @code{Consumer} argument be of type variable @code{E}. 
+            Because we know consumer will be consuming elements, the type @code{E} has to:
+          @hl.scala
+            E >: T
+            // This means
+            ? super T //Hence we get:
+            public void forEach(Consumer<? super T> consumer) 
+          @p 
+            This is also how JDK defines it in @a("ArrayList.foreach",href:="http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/3cbb65d9af9e/src/share/classes/java/util/ArrayList.java#l1225").
+            Notice again how nicely contra-variance fits in when we have to consume something. Other similar examples where we consume elements:
+          @hl.scala
+            public boolean removeIf(Predicate<? super E> filter)
+            public void sort(Comparator<? super E> c) 
+        @sect{addAll}  
+          If we were to design @code{addAll} method in class @code{ArrayList<T>}, the simplest solution would be to:
+          @hl.scala
+            public boolean addAll(Collection<T> c)
+          @p
+            This again is too restrictive. What if you wanted to do:  
+          @hl.ref(wd/'generics/'src/'main/'java/"Lib.java", start="addAll", end="//end")
+          @p
+            This would give a compiler error with our definition of @code{addAll}. We can improve this. With addAll we want to be able to take any collection of a type @code{E} such that:
+          @hl.scala              
+            E <: T
+            //Hence
+            public <E extends T> boolean addAll(Collection<E> c)
+          @p
+            This is also how @a("jdk",href:="http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/3cbb65d9af9e/src/share/classes/java/util/ArrayList.java#l561") defines it (Instead of type variable, they use bound).
+            Notice we will be reading from collection and how nicely covariance fits in.
+      
+      @sect{Collections.min}
+        @p
+          Lets try declaring @code{Collections.min}. This method should:
+        @ul
+          @li 
+            Take a collection as argument
+          @li 
+            The type of collection should extend Comparable (So that we can compare them)
+          @li 
+            Return the minumum element in collection based on Comparable.
+        @p
+          The simplest way to do it would be by:
+        @hl.ref(wd/'generics/'src/'main/'java/"Lib.java", start="min1", end="//end")
+        @p
+          From our experience, we know it is restrictive. Lets improve it. We know, we will be: 
+        @ul
+          @li
+            Reading from the collection. Covariance fits in well here.
+          @li 
+            Comparator will be consuming it. Contra-Variance fits well here
+        @p 
+          So what we get is this:        
+        @hl.ref(wd/'generics/'src/'main/'java/"Lib.java", start="min2", end="//end")  
+        @p
+          Saw how simple it was? It looks scary but understanding covariance and contravariance helped us. JDK defines the method as:
+        @hl.scala
+          static <T extends Object & Comparable<? super T>> T 
+                                                  min(Collection<? extends T> coll) 
+        @p 
+          They also do @code{T extends Object}. This is required for backward compatibility purpose. In Pre-Java5 era, @code{min} would take a collection of @code{Object's}
+          and return an @code{Object}. In our definition of min, it would return a @code{Comparable} and not @code{Object}. Putting a dummy @code{T extends Object} tricks the compiler to be able to return an @code{Object}. This is a good read on @a("it",href:="http://www.angelikalanger.com/GenericsFAQ/FAQSections/ProgrammingIdioms.html#FAQ104")
+      @sect{Collections.copy}
+        @p
+          We need to copy elements from a list to another:
+        @hl.ref(wd/'generics/'src/'main/'java/"Lib.java", start="copy", end="//end")  
+        @p 
+          This does the job. There is also an alternative way. We know that we will be:
+        @ul
+          @li
+            Reading from src. Co-Variance will fit well.
+          @li
+            Write in dest. Contra-Variance will fit well.            
 
-        @blockquote{@u{@b{Co-Variance is great for producing. Contra-Variance is great for consuming}}}         
+        @hl.ref(wd/'generics/'src/'main/'java/"Lib.java", start="copy2", end="//end")  
+        @p
+          This will also do the job. Some more similar interesting scenarios:
+        @hl.scala
+          static <T> int binarySearch(List<? extends Comparable<? super T>> list, T key)
+          static <T> void fill(List<? super T> list, T obj) 
+          static <T> List<T> unmodifiableList(List<? extends T> list)
+          static <T> T max(Collection<? extends T> coll, Comparator<? super T> comp) 
 
-          
+      @sect{Object.getClass}
+        @p
+          A tricky one. @a("Object.getClass",href:="http://hg.openjdk.java.net/jdk7/jdk7/jdk/file/tip/src/share/classes/java/lang/Object.java#l64") is defined as:
+        @hl.scala
+          public final native Class<?> getClass();
+        @p 
+          But in reality, the compiler returns @code{Class<? extends |X|>} where |X| is the erasure of the reference class on which @code{getClass} is called. For example:
+        @hl.ref(wd/'generics/'src/'main/'java/"Lib.java", start="Dog a", end="//end")  
+        @p
+          Compiler is doing some extra magic here. The question is: Why does it return @code{Class<? extends |X|>} rather than @code{Class<|X|>}? i.e. why doesnt it do:
+        @hl.scala
+          Class<Dog> aa = a.getClass();        
+          Class<Animal> bb = b.getClass();
+        @p
+          The above should not be allowed. Because if it did, then @code{b.getClass} would return @code{Class<Animal>}. But in reality,
+          the object @code{b} is a @code{Dog}. Which means @code{Class<Dog>} is the actual class object returned when we do @code{b.getClass}.
+          And @code{Class<Animal> != Class<Dog>}. Hence @code{Class<? extends |X|>} is a safer bet. (Covariance again as reads).
+        @p 
+          A similar scenario can be found with @a("Class.asSubClass",href:="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html#asSubclass(java.lang.Class)") 
+        @hl.scala
+          <U> Class<? extends U> asSubclass(Class<U> clazz) 
+    
+    @sect{Function}      
+      @p
+        In all our cases till now, we have been dealing with Parametric class with only one parametric type.
+
   @hr
   @sect{More Interesting Stuff}
     @p 
@@ -297,7 +435,11 @@
       @hl.ref(wd/'generics/'src/'main/'resources/"Wontwork.java")
       @p 
         Please look at the @a("source",href:="https://gist.github.com/purijatin/a0486995c7df0e56b398") to know more.
-
+        }
+    
+    @sect{Java Type-System}
+      @p
+        We are almost done now.
 
         
 
