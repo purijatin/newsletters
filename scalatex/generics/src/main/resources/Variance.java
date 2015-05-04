@@ -21,7 +21,7 @@ public class Variance{
 		List<? extends Dog> dog; // dog is a list of elements of some unknown type.
 		// In java, all reference types extends Object. So now we know that:
 		//	-	This unknown type <: Object
-		//	-	Dog <: Thus unknown type
+		//	-	Thus unknown type <: Dog
 		// What we do not know is, the precise type of the unknown type. It can be anything in between the bounds
 		List<? super Dog> dog; 		
 		//	 Dog <: This unknown type <: Object

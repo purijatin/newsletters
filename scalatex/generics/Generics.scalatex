@@ -27,15 +27,13 @@
 @sect("Polymorphism")
 
   @p
-    	Parametric Polymorphism is the ability to express data and functions over an abstract type but without specifying it. It is powerful in a sense that it lets you model behavior effectively.
-
-  @p 
-  		Different languages have chosen different tradeoffs between code footprint and abstraction to implement Parametric Polymorphism, hence giving rise to different flavors in implementation.
+    	Parametric Polymorphism is the ability to express data and functions over an abstract type. It is powerful in a sense that it lets you model behavior effectively. Different languages have chosen different tradeoffs between code footprint and abstraction to implement Parametric Polymorphism, hence giving rise to different flavors in implementation.
+  @p
   		Java's type system is not as expressive as one would like it to be, but never the less has a mechanism to do Parametric Polymorphism with a construct called @code{Generics}.
 
 @sect{Generics}
   @p 
-      Generics are called and implemented differently in different languages. Two of the well known implementations are using:
+      Generics are named and implemented differently in different languages. Two of the well known implementations are using:
 
   @sect{Type Erasure} 
       @p 
@@ -57,8 +55,8 @@
           This technique is called as Type Erasure. Simply put, generics are a compile-time creation and runtime has no clue about their existence. 
           Compiler provides adequate type-safety at compile time but @code{erases} them at runtime. 
       @p
-          In Java8, there is no special byte-code for Generic classes or generic methods. They dont exist in reality
-          This also means, it is difficult to know the exact generic type of list at runtime. (Not impossible though. See below). As a side-effect:
+          In Java8, there is no special byte-code for Generic classes or generic methods. They dont exist in reality.
+          This also means, it is difficult to know the exact generic type of list at runtime. (Not impossible though. See @sect.ref{Capture Type}). As a side-effect:
       @div
         @hl.highlight(
           """  public void evaluate(List<Integer> ls)
@@ -89,10 +87,10 @@
           An example of this in Java, is something called @b{Specializations} to be introduced in java9 under @a("Project-Valhalla",href:="http://openjdk.java.net/projects/valhalla/")
       @hl.ref(wd/'generics/'src/'main/'resources/"Java9.java")
       @p
-          Notice @code{List<int>.class} prints @b{java.anyutil.List${0=I}} and @code{java.util.List.class} prints @b{java.util.List}. This means information about Parametric Types are also embedded at runtime. 
-          @code{List<int>} is aware of it being a list of @code{int's}. The information is not erased. (Though this functionality will only be available only for primitives and value classes in Java9)
+          Notice @code{List<int>.class} prints @b{java.anyutil.List${0=I}} and @code{java.util.List.class} prints @b{java.util.List}. This means information about Parametric Types is also embedded at runtime. 
+          @code{List<int>} is aware of it being a list of @code{int's}. The information is not erased. (Though this functionality will be available only for primitives and @a("value",href:="http://cr.openjdk.java.net/~jrose/values/values-0.html") classes in Java9. A special type variable identifier @code{any} is introduced for this enhanced treatment)
       @p
-          This ability to contain the type information at runtime is called @code{reifiability}. In Java all primitives, non-generic classes are reifiable (More details in @a("JLS",href:="https://docs.oracle.com/javase/specs/jls/se7/html/jls-4.html#jls-4.7")). Another classic example are @code{Arrays} in Java:
+          This ability to contain the type information at runtime is called @code{reifiability}. In Java all primitives, non-generic classes are reifiable (More details in @a("JLS",href:="https://docs.oracle.com/javase/specs/jls/se7/html/jls-4.html#jls-4.7")). Another classic example are @code{Arrays} in Java. Arrays in Java are refifiable:
       @pairs
           @half
             @hl.ref(wd/'generics/'src/'main/'java/"Reify.java", start="Dog[]", end="//end")
@@ -130,7 +128,7 @@
           @code{=:=} - Neither Sub or Super type. If @code{A =:= B} then A and B are same
         
       @p
-        We will now see sub-typing influences generics and its influence on class design.
+        We will now see the sub-typing of generic class and its influence on api design.
   @sect{Variance}
     @p
       This is as intense as it can get, but hold on. It is the one ring to rule them all in Generics world.
@@ -162,7 +160,7 @@
         @code{?} is a wild card or a hack. A wild-card can be read as @b{some unknown type}. So when we say:
       @hl.scala
         List<?> ls ;
-      @p It means `ls` is a list of some unknown type which we do not precisely know. Raw types are a bridge between pre and post Java5 code.
+      @p It means `ls` is a list of some unknown type which we do not precisely know. Wild card is a bridge between pre and post Java5 code.
         @pairs
         @half
           @hl.scala
@@ -178,8 +176,11 @@
               // Hence by transitivity,
               List ls3 = new ArrayList<Integer>();
       @p 
-        This sub-typing relationship made post java-5 code backward compatible. Wild cards are only possible in a language where generics are implemented using erasure. List<?> would make no sense in reifiable world (what would it mean at runtime?)
-        Java's type system does not give a provison to have co-variant and contra-variant generic classess. But willd card's let you provide bounds, thus enabling co-variance and contra-variance behavior @i{like} in Java (Frankly the experience is far from right):
+        This sub-typing relationship made post java-5 code backward compatible. Wild cards are only possible in a language where generics are implemented using erasure. List<?> would make not make much sense in reifiable world (C++ does have template methods, so it retains behavioral parametricity but not data parametricity).
+      @p  
+        Java's type system does not give a provison to have co-variant and contra-variant generic classess. But willd card's let you provide bounds, thus enabling co-variance and contra-variance @i{like} behavior in Java (Frankly the experience is far from right). 
+        In Java, every type variable declared as a type parameter has a bound. If no bound is declared for a type variable, @code{Object} is assumed. 
+        Wildcards are useful in situations where only partial knowledge about the type parameter is required. This property combined with bounds can be very useful:
       @hl.ref(wd/'generics/'src/'main/'resources/"Variance.java", start="List<?>", end="//end")        
   @sect{Case-Studies}
     @sect{Co-Variant Arrays}
@@ -189,11 +190,20 @@
       @p
         Line (1),(2),(3) would throw a ArrayStoreException at runtime. Why? because if it doesn't, then this will:
       @hl.scala
-        Dog d = dogs[1];
+        Dog d = dogs[1]; 
+        //dogs[1] is a String
         //BOOM! ClassCastException
       @p
         @u{Shouldn't the compiler have caught this wrong doing (i.e. Line(1),(2),(3))) at compile time?}. 
         The culprit is making arrays as @code{co-variant}. i.e. the ability to do @code{Animal[] ob = dogs} at line-a has put us in trouble.
+
+      @p
+        Co-Variant Arrays is language blunder. In one of the talks, Martin Odersky (creator of javac for java5) had mentioned that co-variance of arrays decision was made as a tradeoff to be able to do below in initial java version:
+      @hl.scala
+        public static void sort(Object[] a) //Arrays.sort
+      @p
+        Without arrays being co-variant it would had been impossible to have a method like sort, which could take any kind of arrays(Remember there was no generics then, so the only way to be able to take all kinds of array as argument was to make them co-variant). Obviously many modern languages have marked Arrays as invariant and use generics to exhibit parametric polymorphism. (i.e. @code{String[]} becomes @code{Array<String>})
+      @p
         Co-Variant Arrays are also a reason why arrays of generic classes are illegal:
       @pairs
         @half
@@ -207,13 +217,7 @@
           ArrayList<?>[] ls = new ArrayList<?>[0];
         @p 
           The explanation on why its legal is left as food for thought to readers.  
-
-      @p
-        Co-Variant Arrays is language blunder. In one of the talks, Martin Odersky had mentioned that this decision was made as a tradeoff to be able to do below in initial java version:
-      @hl.scala
-        public static void sort(Object[] a) //Arrays.sort
-      @p
-        Without arrays being co-variant it would had been impossible to have a method like sort, which could take any kind of arrays(Remember there was no generics then, so the only way to be able to take all kinds of array as argument was to make them co-variant). Obviously many modern languages have marked Arrays as invariant and use generics to exhibit parametric polymorphism. (i.e. @code{String[]} becomes @code{Array<String>})
+  
       @p 
         An important insight we get from above experience is: @b{Co-variance might not go well with mutability}
     @sect{Writes & Reads}    
@@ -333,7 +337,7 @@
       
       @sect{Collections.min}
         @p
-          Lets try declaring @code{Collections.min}. This method should:
+          Lets try defining @code{Collections.min}. This method should:
         @ul
           @li 
             Take a collection as argument
@@ -361,10 +365,10 @@
                                                   min(Collection<? extends T> coll) 
         @p 
           They also do @code{T extends Object}. This is required for backward compatibility purpose. In Pre-Java5 era, @code{min} would take a collection of @code{Object's}
-          and return an @code{Object}. In our definition of min, it would return a @code{Comparable} and not @code{Object}. Putting a dummy @code{T extends Object} tricks the compiler to be able to return an @code{Object}. This is a good read on @a("it",href:="http://www.angelikalanger.com/GenericsFAQ/FAQSections/ProgrammingIdioms.html#FAQ104")
+          and return an @code{Object}. In our definition of min, it would return a @code{Comparable} and not @code{Object}. Putting a dummy @code{T extends Object} tricks the compiler to be able to return an @code{Object}. @a("This",href:="http://www.angelikalanger.com/GenericsFAQ/FAQSections/ProgrammingIdioms.html#FAQ104") is a good read on it.
       @sect{Collections.copy}
         @p
-          We need to copy elements from a list to another:
+          Lets try implemention a copy function that will copy elements from a list to another. We will be reading from a list and writing in another:
         @hl.ref(wd/'generics/'src/'main/'java/"Lib.java", start="copy", end="//end")  
         @p 
           This does the job. There is also an alternative way. We know that we will be:
@@ -378,10 +382,10 @@
         @p
           This will also do the job. Some more similar interesting scenarios:
         @hl.scala
-          static <T> int binarySearch(List<? extends Comparable<? super T>> list, T key)
-          static <T> void fill(List<? super T> list, T obj) 
-          static <T> List<T> unmodifiableList(List<? extends T> list)
-          static <T> T max(Collection<? extends T> coll, Comparator<? super T> comp) 
+          <T> int binarySearch(List<? extends Comparable<? super T>> list, T key)
+          <T> void fill(List<? super T> list, T obj) 
+          <T> List<T> unmodifiableList(List<? extends T> list)
+          <T> T max(Collection<? extends T> coll, Comparator<? super T> comp) 
 
       @sect{Object.getClass}
         @p
@@ -407,12 +411,52 @@
     
     @sect{Function}      
       @p
-        In all our cases till now, we have been dealing with Parametric class with only one parametric type.
+        In all our cases till now, we have been dealing with classes with only one parametric type. Rules and behavior do not change will increasing rank in parametricity.
+      @p
+        A Function like in true mathematical sense, takes an input and returns an output (Ideally with no @a("side-effects",href:="http://en.wikipedia.org/wiki/Side_effect_%28computer_science%29")). An example:
+      @hl.scala
+        Function<Integer, String> f = (Integer i) -> String.valueOf(i);
+        //`f` is a function from `Integer => String`
+      We can do transformations with functions:
+      @hl.scala
+        Let f = Integer => String
+        Let g = String => String
+
+        Then f o g = Integer => Integer
+             g o f = String  => String
+      @p
+        Lets try building this transformation. The simplest solution would be to:
+      @hl.ref(wd/'generics/'src/'main/'java/"Lib.java", start="<A,B,C>", end="//end")  
+      @p
+        This isn't a great solution. Because:
+      @hl.ref(wd/'generics/'src/'main/'java/"Lib.java", start="andThenFail", end="//end")  
+      @p
+        So we need to do better. Lets analyze it. For the composition @code{f o g}:
+      @ul
+        @li
+          We will be writing an argument to `f`. So Contra-Variance
+        @li
+          `f` will then return the value. Read hence Co-Variance
+        @li 
+          The returned value by `f` will be written to `g`. Again Contra-Variance
+        @li
+          `g` will return the final value. Co-Variance
+      @p
+        Hence we get:
+      @hl.ref(wd/'generics/'src/'main/'java/"Lib.java", start="andThen2", end="//end")  
+      @hl.ref(wd/'generics/'src/'main/'java/"Lib.java", start="fog", end="//end") 
+      @p
+        @a("andThen",href:="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html#andThen-java.util.function.Function-") and @a("compose",href:="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html#compose-java.util.function.Function-") of @a("Function.java",href:="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html") are built on the same principles.
+
+
+        
+
+
 
   @hr
   @sect{More Interesting Stuff}
     @p 
-      Mind You! Some super awesome stuff on the way. Chuck everything on this page, this is breaking the barrior!
+      Mind You! Some super awesome stuff on the way!
     @sect{Capture Type}
       @p
         Is it possible to obtain @u{information about generic types at runtime?}. Well it is possible, but its dirty:
@@ -439,7 +483,51 @@
     
     @sect{Java Type-System}
       @p
-        We are almost done now.
+        Some more general details on Java and JVM's type system capabilities. Java is Nominally Typed.
+      @sect{Nominal Typing}
+        @p
+          What it means is:
+        @hl.ref(wd/'generics/'src/'main/'resources/"TypeSys.java",end="//end")  
+        @p
+          Even though @code{city} and @code{country} are exactly the same in construct and meaning, you cannot pass
+          country to @code{storeInDb}. This is because the method argument is nominal to take only City. Basically, 
+          class names inside objects are part of what it means to be an object. Class name information inside an object is called its nominal information.
+          To emphasize the fact that objects in class-based OOP have class names as part of their meaning they are sometimes called nominal objects.
+        
+        @p
+          Some programming languages instead take arguments not based on nominal type but rather based on structure of the data type. For example in Scala,
+        @hl.ref(wd/'generics/'src/'main/'resources/"TypeSys.java",start="foo",end="//end")  
+        @p
+          Here @code{foo} can take any argument which has a method @code{getName} in it. Its based on structure rather than the name of the type.
+
+      @sect{Statically & Strongly}    
+        @p
+          Java is statically typed. Which means the compiler does not let you do:
+        @hl.scala
+          Animal a = "123";
+        @p
+          Statically typed means that the compiler wont let you assign data/construct with a type which does not define it. Java is Strongly Typed. 
+          This means even at runtime you cannot wrongly assign a type to something it is not:
+        @hl.scala
+            Integer i = 23;
+            String s = (String) i; 
+            //ClassCastException. It knows at runtime that it an Int and not a String.
+        @sect{Type Inference}
+        
+          @p
+            Type Inference refers to the abiliy to deduce the type of a datatype or an expression automatically. Java Compiler
+            leverages its type inference power to deduce type automatically. Some simple examples would be:
+          @hl.scala
+            List<String> ls = new ArrayList<>();
+          @p
+            Here the compiler it self realizes that the object is of type @code{ArrayList<String>}. Some other examples:
+          @hl.scala
+            List<String> ls = Collections.emptyList(); 
+            //compiler infers `Collections.emptyList()` to `Collections.<String>emptyList()`
+
+
+
+
 
         
 

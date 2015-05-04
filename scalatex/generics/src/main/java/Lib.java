@@ -72,17 +72,37 @@ class Claz{
         Class<? extends Animal> bb = b.getClass();
         //end
         Function1 f = new Function1();
-        Function<? super Dog, ? extends Animal> function = f.andThen2((Dog x) -> new Animal(),
-                (Object x) -> new Animal());
     }
 }
 class Function1{
-    public <A,B,C> Function<A,C> andThen(Function<A,B> first, Function<B,C> later){
+    public static <A,B,C> Function<A,C> andThen(Function<A,B> first,
+                                                Function<B,C> later){
         return first.andThen(later);
     }
+    //end
 
-    public <A,B,C> Function<? super A,? extends C> andThen2(Function<? super A,? extends B> first,
-                                                            Function<? super B,? extends C> later){
-        return first.andThen(later);
+    private static void andThenFail(){
+        Function<Animal, Dog> f = (Animal a) -> new Dog(); //Animal => Dog
+        Function<Object, Animal> g = (Object a) -> new Animal();//Object => Animal
+        //Their composition should give: Animal => Animal. But
+        //Function1.andThen(f,g); error
     }
+    //end
+
+    public static  <A,B,C> Function<A,C> andThen2
+                                        (Function<? super A,? extends B> first,
+                                        Function<? super B,? extends C> later){
+        return (A t) -> later.apply(first.apply(t));
+    }
+    //end
+
+    public void fog(){
+        Function<Animal, Dog> f = (Animal a) -> new Dog();
+        Function<Object, Animal> g = (Object a) -> new Animal();
+        Function<? super Animal, ? extends Animal> function = andThen2(f, g);
+        Animal apply = function.apply(new Animal());
+        Function<Animal, Dog> h = (Animal a) -> new Dog();
+        andThen2(andThen2(f,g), h);
+    }
+    //end
 }
