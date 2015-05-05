@@ -27,9 +27,15 @@
 @sect("Polymorphism")
 
   @p
-    	Parametric Polymorphism is the ability to express data and functions over an abstract type. It is powerful in a sense that it lets you model behavior effectively. Different languages have chosen different tradeoffs between code footprint and abstraction to implement Parametric Polymorphism, hence giving rise to different flavors in implementation.
+    	Polymorphism is the ability to express the same thing in different forms (Poly=Many, Morph=Form). There are multiple flavors to polymorphism.
+      One very well known flavor is in OOP with inheritance. But there are several different flavors which are quite powerful never the less.
+      One of them is Parametric Polymorphism.
   @p
-  		Java's type system is not as expressive as one would like it to be, but never the less has a mechanism to do Parametric Polymorphism with a construct called @code{Generics}.
+  		 To simply explain it, one can write a data type or function generically without depending upon their precise parametric (aka generic) type. And this parametric type is instantiated with particular type when needed.
+       One very interesting property of this is that: All the instances of a generic function/data type behave the same irrespective of their parametric type.
+
+  @p
+     Java gives us ability to do Parametric Polymorphism with a construct called @code{Generics}.
 
 @sect{Generics}
   @p 
@@ -526,7 +532,7 @@
           You can assign any Functional Interface based on the structure of lambda. The evolution and design of lambdas is quite interesting,
           especially after the influence of Type-Erasure. @a("This",href:="http://cr.openjdk.java.net/~briangoetz/lambda/lambda-state-final.html") is a very very good read.
 
-      @sect{Statically & Strongly}    
+      @sect{Static & Strong}    
         @p
           Java is statically typed. Which means the compiler does not let you do:
         @hl.scala
@@ -555,6 +561,23 @@
             Many functional languages go very far to infer types. Even to an extent that you do not specify types anywhere in your program.
             Interested people should have a look at @a("Hindley-Miler Type System",href:="http://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system"). It has been extremely influentional in type system of 
             ML, OCaml, Haskell, F# etc.
+@sect{References}        
+    @p
+      @ul
+        @li 
+          To get started: @a("https://docs.oracle.com/javase/tutorial/java/generics/",href:="https://docs.oracle.com/javase/tutorial/java/generics/")
+        @li 
+          When you are stuck: @a("http://www.angelikalanger.com/GenericsFAQ/FAQSections/ProgrammingIdioms.html",href:="http://www.angelikalanger.com/GenericsFAQ/FAQSections/ProgrammingIdioms.html")
+        @li
+          For precise insights: @a("https://docs.oracle.com/javase/specs/jls/se7/html/jls-4.html",href:="https://docs.oracle.com/javase/specs/jls/se7/html/jls-4.html")
+        @li
+          To know more on types: @a("TAPL",href:="http://www.cis.upenn.edu/~bcpierce/tapl/")
+        @li
+          @a("http://cr.openjdk.java.net/~briangoetz/lambda/lambda-state-final.html",href:="http://cr.openjdk.java.net/~briangoetz/lambda/lambda-state-final.html")
+        @li  
+          @a("http://cr.openjdk.java.net/~jrose/values/values-0.html",href:="http://cr.openjdk.java.net/~jrose/values/values-0.html")  
+        @li
+          @a("http://cr.openjdk.java.net/~briangoetz/valhalla/specialization.html",href:="http://cr.openjdk.java.net/~briangoetz/valhalla/specialization.html")  
     @hr
 
   @footer    

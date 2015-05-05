@@ -65,10 +65,16 @@ span.hljs-tag, span.hljs-symbol{
 <div style="margin: 0px;color: #333;text-align: center;padding: 2.5em 2em 0;border-bottom: 1px solid #eee;display: block;" id="Polymorphism" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><h1 style="margin: 0.2em 0;font-size: 3em;font-weight: 300;">Polymorphism<a class=" scalatex-site-Styles-headerLink" href="#Polymorphism" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a></h1><br /></div><div class=" scalatex-site-Styles-content">
 
   <p>
-    	Parametric Polymorphism is the ability to express data and functions over an abstract type. It is powerful in a sense that it lets you model behavior effectively. Different languages have chosen different tradeoffs between code footprint and abstraction to implement Parametric Polymorphism, hence giving rise to different flavors in implementation.</p>
+    	Polymorphism is the ability to express the same thing in different forms (Poly=Many, Morph=Form). There are multiple flavors to polymorphism.
+      One very well known flavor is in OOP with inheritance. But there are several different flavors which are quite powerful never the less.
+      One of them is Parametric Polymorphism.</p>
   <p></p>
-  		Java's type system is not as expressive as one would like it to be, but never the less has a mechanism to do Parametric Polymorphism with a construct called <code>Generics</code>.
-</div>
+  		 To simply explain it, one can write a data type or function generically without depending upon their precise parametric (aka generic) type. And this parametric type is instantiated with particular type when needed.
+       One very interesting property of this is that: All the instances of a generic function/data type behave the same irrespective of their parametric type.
+
+  <p>
+     Java gives us ability to do Parametric Polymorphism with a construct called <code>Generics</code>.
+</p></div>
 <div style="margin: 0px;color: #333;text-align: center;padding: 2.5em 2em 0;border-bottom: 1px solid #eee;display: block;" id="Generics" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><h1 style="margin: 0.2em 0;font-size: 3em;font-weight: 300;">Generics<a class=" scalatex-site-Styles-headerLink" href="#Generics" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a></h1><br /></div><div class=" scalatex-site-Styles-content">
   <p>
       Generics are named and implemented differently in different languages. Two of the well known implementations are using:
@@ -728,7 +734,7 @@ BinaryOperator&lt;Integer&gt; a3 = (x, y) -&gt; Integer.compare(x, y);</code></p
           You can assign any Functional Interface based on the structure of lambda. The evolution and design of lambdas is quite interesting,
           especially after the influence of Type-Erasure. <a href="http://cr.openjdk.java.net/~briangoetz/lambda/lambda-state-final.html">This</a> is a very very good read.
 </p>
-      <h1 id="Statically&amp;Strongly" style="display: block;" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><a class=" scalatex-site-Styles-headerLink" href="#Statically&amp;Strongly" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a>Statically &amp; Strongly</h1>
+      <h1 id="Static&amp;Strong" style="display: block;" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><a class=" scalatex-site-Styles-headerLink" href="#Static&amp;Strong" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a>Static &amp; Strong</h1>
         <p>
           Java is statically typed. Which means the compiler does not let you do:</p>
         <pre><code class="scala scalatex-site-Styles-highlightMe">Animal a = &quot;123&quot;;</code></pre>
@@ -752,17 +758,34 @@ Collections.max(Arrays.asList(1,2,3),(x,y) -&gt; Integer.compare(x,y));
           <p>
             Many functional languages go very far to infer types. Even to an extent that you do not specify types anywhere in your program.
             Interested people should have a look at <a href="http://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system">Hindley-Miler Type System</a>. It has been extremely influentional in type system of
-            ML, OCaml, Haskell, F# etc.</p>
+            ML, OCaml, Haskell, F# etc.</p></div></hr>
+<div style="margin: 0px;color: #333;text-align: center;padding: 2.5em 2em 0;border-bottom: 1px solid #eee;display: block;" id="References" class=" scalatex-site-Styles-hoverContainer scalatex-site-Styles-headerTag"><h1 style="margin: 0.2em 0;font-size: 3em;font-weight: 300;">References<a class=" scalatex-site-Styles-headerLink" href="#References" style="position: absolute;right: 0px;"><i class="fa fa-link"></i></a></h1><br /></div><div class=" scalatex-site-Styles-content">
+    <p>
+      <ul>
+        <li>
+          To get started: <a href="https://docs.oracle.com/javase/tutorial/java/generics/">https://docs.oracle.com/javase/tutorial/java/generics/</a></li>
+        <li>
+          When you are stuck: <a href="http://www.angelikalanger.com/GenericsFAQ/FAQSections/ProgrammingIdioms.html">http://www.angelikalanger.com/GenericsFAQ/FAQSections/ProgrammingIdioms.html</a></li>
+        <li>
+          For precise insights: <a href="https://docs.oracle.com/javase/specs/jls/se7/html/jls-4.html">https://docs.oracle.com/javase/specs/jls/se7/html/jls-4.html</a></li>
+        <li>
+          To know more on types: <a href="http://www.cis.upenn.edu/~bcpierce/tapl/">TAPL</a></li>
+        <li>
+          <a href="http://cr.openjdk.java.net/~briangoetz/lambda/lambda-state-final.html">http://cr.openjdk.java.net/~briangoetz/lambda/lambda-state-final.html</a></li>
+        <li>
+          <a href="http://cr.openjdk.java.net/~jrose/values/values-0.html">http://cr.openjdk.java.net/~jrose/values/values-0.html</a></li>
+        <li>
+          <a href="http://cr.openjdk.java.net/~briangoetz/valhalla/specialization.html">http://cr.openjdk.java.net/~briangoetz/valhalla/specialization.html</a></li></ul></p>
     <hr />
 </div>
   <footer>
     <div style="opacity: 0.6;font-style: oblique;">
       <p>
         This booklet has been generated using <a href="https://github.com/lihaoyi/Scalatex">Scalatex</a> developed by <a href="https://github.com/lihaoyi">Li Haoyi</a>. You might want to look at it. Its easier to setup than <a href="http://jekyllrb.com/">Jekyll</a> and certainly more expressive than Wordpress. And provides compile time <i>like</i> type safety.
-</p></div></footer></hr>
+</p></div></footer>
 </div><script>
     scalatex.scrollspy.Controller().main(
-      [{"value":"Polymorphism","children":[]},{"value":"Generics","children":[{"value":"Type Erasure","children":[]},{"value":"Reification","children":[]}]},{"value":"Sub-Typing (<:)","children":[{"value":"Liskov Substitution","children":[]}]},{"value":"Variance","children":[{"value":"Co-Variance","children":[]},{"value":"Contra-Variance","children":[]},{"value":"In-Variance","children":[]},{"value":"Wildcards (?)","children":[]}]},{"value":"Case-Studies","children":[{"value":"Co-Variant Arrays","children":[]},{"value":"Writes & Reads","children":[{"value":"Writes","children":[]},{"value":"Reads","children":[]}]},{"value":"Library Examples","children":[{"value":"ArrayList","children":[{"value":"foreach","children":[]},{"value":"addAll","children":[]}]},{"value":"Collections.min","children":[]},{"value":"Collections.copy","children":[]},{"value":"Object.getClass","children":[]}]},{"value":"Function","children":[]}]},{"value":"More Interesting Stuff","children":[{"value":"Capture Type","children":[{"value":"New Instance","children":[]}]},{"value":"Java Type-System","children":[{"value":"Nominal Typing","children":[]},{"value":"Statically & Strongly","children":[{"value":"Type Inference","children":[]}]}]}]}]
+      [{"value":"Polymorphism","children":[]},{"value":"Generics","children":[{"value":"Type Erasure","children":[]},{"value":"Reification","children":[]}]},{"value":"Sub-Typing (<:)","children":[{"value":"Liskov Substitution","children":[]}]},{"value":"Variance","children":[{"value":"Co-Variance","children":[]},{"value":"Contra-Variance","children":[]},{"value":"In-Variance","children":[]},{"value":"Wildcards (?)","children":[]}]},{"value":"Case-Studies","children":[{"value":"Co-Variant Arrays","children":[]},{"value":"Writes & Reads","children":[{"value":"Writes","children":[]},{"value":"Reads","children":[]}]},{"value":"Library Examples","children":[{"value":"ArrayList","children":[{"value":"foreach","children":[]},{"value":"addAll","children":[]}]},{"value":"Collections.min","children":[]},{"value":"Collections.copy","children":[]},{"value":"Object.getClass","children":[]}]},{"value":"Function","children":[]}]},{"value":"More Interesting Stuff","children":[{"value":"Capture Type","children":[{"value":"New Instance","children":[]}]},{"value":"Java Type-System","children":[{"value":"Nominal Typing","children":[]},{"value":"Static & Strong","children":[{"value":"Type Inference","children":[]}]}]}]},{"value":"References","children":[]}]
   )</script><script>
     ['DOMContentLoaded', 'load'].forEach(function(ev){
       addEventListener(ev, function(){
