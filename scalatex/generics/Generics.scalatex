@@ -181,7 +181,13 @@
         Java's type system does not give a provison to have co-variant and contra-variant generic classess. But willd card's let you provide bounds, thus enabling co-variance and contra-variance @i{like} behavior in Java (Frankly the experience is far from right). 
         In Java, every type variable declared as a type parameter has a bound. If no bound is declared for a type variable, @code{Object} is assumed. 
         Wildcards are useful in situations where only partial knowledge about the type parameter is required. This property combined with bounds can be very useful:
-      @hl.ref(wd/'generics/'src/'main/'resources/"Variance.java", start="List<?>", end="//end")        
+      @hl.ref(wd/'generics/'src/'main/'resources/"Variance.java", start="List<?>", end="//end") 
+      @p
+        In Java, co-variance and contra-variance of generics is not possible first-hand. But using bounds with wildcards, you can replicate the behavior as a second class citizen.
+      @div(opacity:="0.5",fontStyle.oblique)
+        @p
+          For people interested in theory behind wildcards: Wildcards are a restricted form of existential types (Remember @a("Existential Quantifier",href:="http://en.wikipedia.org/wiki/Existential_quantification") in Mathematics).
+          So say if you have `SomeClass<X extends String>`, then `SomeClass<?>` is a shorthand for`SomeClass<T> forSome{type T <: String}`.
   @sect{Case-Studies}
     @sect{Co-Variant Arrays}
       @p
@@ -478,8 +484,20 @@
         Though there are some limitations:
       @hl.ref(wd/'generics/'src/'main/'resources/"Wontwork.java")
       @p 
-        Please look at the @a("source",href:="https://gist.github.com/purijatin/a0486995c7df0e56b398") to know more.
-        }
+        Please look at the @a("source",href:="https://gist.github.com/purijatin/a0486995c7df0e56b398") to know more. You might also want to look at @a("TypeTools",href:="https://github.com/jhalterman/typetools") which is a library to resolve generic type information declared on a class, method or even lambda.
+        But they use similar techniques as above to obtain the information.
+      @hr
+      @sect{New Instance}
+        @p
+          Most of the time, you dont have to go this far to obtain parametric type information. And in cases where you are interested, there is an easy way out:
+        @hl.ref(wd/'generics/'src/'main/'java/'types/"KnowType.java",start="KnowType",end="//end")
+        @hl.scala
+          KnowType<Animal> a = new KnowType<Animal>(Animal.class);
+          Animal a = a.getTypeInfo().newInstance();
+        @p
+          @code{Class<T>} preserves the information. Please refer @a("Class",href:="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html") api for creating instances with constructors and much more. 
+          In case of generic arrays, you can:
+        @hl.ref(wd/'generics/'src/'main/'java/'types/"KnowType.java",start="KnowArray",end="//end")        
     
     @sect{Java Type-System}
       @p
@@ -495,10 +513,18 @@
           To emphasize the fact that objects in class-based OOP have class names as part of their meaning they are sometimes called nominal objects.
         
         @p
-          Some programming languages instead take arguments not based on nominal type but rather based on structure of the data type. For example in Scala,
+          Some programming languages instead take arguments not based on nominal type but rather based on structure of the data type. ML and Haskell are structurally typed. Scala has a some flavors of it:
         @hl.ref(wd/'generics/'src/'main/'resources/"TypeSys.java",start="foo",end="//end")  
         @p
           Here @code{foo} can take any argument which has a method @code{getName} in it. Its based on structure rather than the name of the type.
+          If you think even java8 has some small flavors of it in lambda. For example:
+        @hl.scala
+          Comparator<Integer> a1 = (x, y) -> Integer.compare(x, y);
+          BiFunction<Integer, Integer, Integer> a2 = (x, y) -> Integer.compare(x, y);
+          BinaryOperator<Integer> a3 = (x, y) -> Integer.compare(x, y);
+        @p 
+          You can assign any Functional Interface based on the structure of lambda. The evolution and design of lambdas is quite interesting,
+          especially after the influence of Type-Erasure. @a("This",href:="http://cr.openjdk.java.net/~briangoetz/lambda/lambda-state-final.html") is a very very good read.
 
       @sect{Statically & Strongly}    
         @p
@@ -512,8 +538,7 @@
             Integer i = 23;
             String s = (String) i; 
             //ClassCastException. It knows at runtime that it an Int and not a String.
-        @sect{Type Inference}
-        
+        @sect{Type Inference}        
           @p
             Type Inference refers to the abiliy to deduce the type of a datatype or an expression automatically. Java Compiler
             leverages its type inference power to deduce type automatically. Some simple examples would be:
@@ -524,20 +549,17 @@
           @hl.scala
             List<String> ls = Collections.emptyList(); 
             //compiler infers `Collections.emptyList()` to `Collections.<String>emptyList()`
+            Collections.max(Arrays.asList(1,2,3),(x,y) -> Integer.compare(x,y));
+            //compiler infers the lambda to Comparator<Integer>
+          @p
+            Many functional languages go very far to infer types. Even to an extent that you do not specify types anywhere in your program.
+            Interested people should have a look at @a("Hindley-Miler Type System",href:="http://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system"). It has been extremely influentional in type system of 
+            ML, OCaml, Haskell, F# etc.
+    @hr
 
-
-
-
-
-        
-
-
+  @footer    
+    @div(opacity:="0.6",fontStyle.oblique)
+      @p
+        This booklet has been generated using @a("Scalatex",href:="https://github.com/lihaoyi/Scalatex") developed by @a("Li Haoyi",href:="https://github.com/lihaoyi"). You might want to look at it. Its easier to setup than @a("Jekyll",href:="http://jekyllrb.com/") and certainly more expressive than Wordpress. And provides compile time @i("like") type safety.
     
       
-      
-
-        
-          
-        
-
-    	

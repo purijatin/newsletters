@@ -41,3 +41,17 @@ Generics:
 		Retain type: Use Class<?> of the parameter
 		Varargs
 		wild car dis existential type: https://docs.oracle.com/javase/specs/jls/se7/html/jls-4.html#jls-4.8
+
+	1) Generic Array creation
+	2) Use Class for instance creation
+		public class GenericClass<T> {
+		     private final Class<T> type;	
+		     public GenericClass(Class<T> type) {
+		          this.type = type;
+		     }
+		     public Class<T> getMyType() {
+			 return this.type;
+		     }
+		}
+	mention this: https://github.com/jhalterman/typetools
+	3) 
