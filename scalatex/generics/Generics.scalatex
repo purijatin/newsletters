@@ -583,6 +583,6 @@
   @footer    
     @div(opacity:="0.6",fontStyle.oblique)
       @p
-        This booklet has been generated using @a("Scalatex",href:="https://github.com/lihaoyi/Scalatex") developed by @a("Li Haoyi",href:="https://github.com/lihaoyi"). You might want to look at it. Its easier to setup than @a("Jekyll",href:="http://jekyllrb.com/") and certainly more expressive than Wordpress. And provides compile time @i("like") type safety.
+        MIT License. Author: Jatin Puri http://jatinpuri.com. This booklet has been generated using @a("Scalatex",href:="https://github.com/lihaoyi/Scalatex") developed by @a("Li Haoyi",href:="https://github.com/lihaoyi"). You might want to look at it. Its easier to setup than @a("Jekyll",href:="http://jekyllrb.com/") and certainly more expressive than Wordpress. And provides compile time @i("like") type safety.
     
       
